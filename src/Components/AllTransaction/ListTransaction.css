@@ -1,0 +1,43 @@
+.background-image {
+    background-image: url('/home/ninjatech/Desktop/Live_Project/Financial_Tracking_System_User_frontend/src/assets/BackGroundImage.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 110vh;
+    padding-top: 10px;
+}
+
+
+.box-Container{
+    padding: 0px;
+    margin-top: -11px;
+    margin-left: 250px;
+    width: 78%;
+}
+
+.edit-icon {
+  margin-left: -70px;
+
+  }
+
+
+.Action{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+
+.table-row{
+  font-weight: bold !important;
+}
+
+.main_box{
+  /* sx={{
+    flexGrow: 1,
+    backgroundColor: '#f4f4f4',
+    padding: '20px',
+}} */
+ flex-grow: 1;
+ background-color: #f4f4f4;
+ padding: 20px;
+}

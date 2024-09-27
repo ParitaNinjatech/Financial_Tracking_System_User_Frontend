@@ -21,7 +21,7 @@ import {
     TableRow,
     TableCell,
     TableBody,
-    Switch
+    Switch,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -39,7 +39,23 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
+import SearchIcon from '@mui/icons-material/Search';
+import MenuIcon from '@mui/icons-material/Menu';
+import AppBar from '@mui/material/AppBar';
+import Menu from "@mui/material/Menu";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import Modal from '@mui/material/Modal';
+import CloseIcon from '@mui/icons-material/Close';
 
+import {
+  Timeline,
+  TimelineItem,
+  TimelineSeparator,
+  TimelineConnector,
+  TimelineContent,
+  TimelineDot,
+} from '@mui/lab';
+import { AccessTime } from '@mui/icons-material';
 export{
     Avatar,
     Button,
@@ -80,5 +96,19 @@ export{
     Switch,
     DeleteIcon,
     CancelIcon,
-    CheckIcon
+    CheckIcon,
+    SearchIcon,
+    MenuIcon,
+    AppBar,
+    Menu,
+    VisibilityIcon,
+    Modal,
+    CloseIcon,
+    Timeline,
+    TimelineItem,
+    TimelineSeparator,
+    TimelineConnector,
+    TimelineContent,
+    TimelineDot,
+    AccessTime
 }

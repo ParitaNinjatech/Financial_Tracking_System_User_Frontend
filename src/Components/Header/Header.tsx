@@ -1,137 +1,90 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import React from 'react';
+import { Link, SearchIcon, IconButton, Button, Typography, Toolbar, AppBar, AccountCircleIcon, Menu, MenuItem } from "../../common/Index"
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+export default function Header() {
+  const [auth, setAuth] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-function Header() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAuth(event.target.checked);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
-
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
+    <AppBar
+      position="relative"
+      sx={{
+        borderBottom: '1px solid #ddd',
+        background: 'rgba(0, 0, 0, 0.54);',
+        backgroundBlendMode: 'screen',
+      }}
+    >
+      <Toolbar sx={{ flexWrap: 'wrap' }}>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+        <Typography
+          variant="h6"
+          color="inherit"
+          noWrap
+          sx={{ flexGrow: 1, textDecoration: 'none', fontWeight: 700 }}
+        >
+          <Link href="/" color="inherit" underline="none">
+            Financial Tracking
+          </Link>
+        </Typography>
+        <nav>
+          <Link
+            variant="button"
+            href="/addTransaction"
+            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white",fontWeight:"bold" }}
+          >
+            Initiate Transaction
+          </Link>
+          <Link
+            variant="button"
+            href="/listTransaction"
+            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white",fontWeight:"bold"  }}
+          >
+            List Transaction
+          </Link>
+          <Link
+            variant="button"
+            href="/contactus"
+            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white",fontWeight:"bold"  }}
+          >
+            Contact
+          </Link>
+        </nav>
+        <IconButton sx={{ ml: 1, color: "white" }}>
+          <SearchIcon />
+        </IconButton>
+        <Button href="/signIn" sx={{ my: 1, mx: 1.5, color: "white",fontWeight:"bold"  }}>
+          SignIn
+        </Button>
+        <Button href="/signup" sx={{ my: 1, mx: 1.5, color: "white",fontWeight:"bold"  }}>
+          SignUp
+        </Button>
+
+        {auth && (
+          <div>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              onClick={handleMenu}
               color="inherit"
             >
-              <MenuIcon />
+              <AccountCircleIcon />
             </IconButton>
             <Menu
               id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
+              anchorEl={anchorEl}
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'right',
@@ -141,19 +94,24 @@ function Header() {
                 vertical: 'top',
                 horizontal: 'right',
               }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem >
+                <Link
+                  variant="button"
+                  href="/profile"
+                  sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "black" }}
+                >
+                  Profile
+                </Link> </MenuItem>
+              <MenuItem onClick={handleClose}> <Button href="#" sx={{ my: 1, mx: 1.5, color: "black" }}>
+                logOut
+              </Button></MenuItem>
             </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
+          </div>
+        )}
+      </Toolbar>
     </AppBar>
   );
 }
-export default Header;

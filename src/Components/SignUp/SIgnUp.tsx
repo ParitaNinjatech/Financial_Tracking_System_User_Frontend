@@ -18,8 +18,8 @@ import {
 } from "../../common/Index";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css'; // Importing default styles
-import { Metamask, BackGroundImage } from '../../assets/Image';
+import 'react-phone-input-2/lib/style.css'; 
+import { Metamask} from '../../assets/Image';
 import "./SignUp.css";
 
 const theme = createTheme();
@@ -42,26 +42,13 @@ export default function SignUp() {
             <Container
                 component="main"
                 maxWidth={false}
-                sx={{
-                    minHeight: '120vh',
-                    width: '100vw',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundImage: `url(${BackGroundImage})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    padding: 0,
-                    margin: 0,
-                    overflow: 'hidden',
-                }}
+                className='container'
             >
                 <CssBaseline />
-                <Grid container spacing={2} sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Grid container spacing={2} className='container_title'>
                     <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' }, pr: 10 }}>
                         <Box>
-                            <Typography variant="h4" gutterBottom sx={{ color: "maroon", mb: 5, marginTop: "-110px" }}>
+                            <Typography variant="h4" gutterBottom sx={{ mb: 5}} className='title'>
                                 Welcome to the Financial Tracking System
                             </Typography>
                         </Box>
@@ -71,18 +58,12 @@ export default function SignUp() {
                     <Grid item xs={12} md={4} sx={{ pl: 8 }}>
                         <Card sx={{ p: 3 }}>
                             <CardContent>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <div style={{ display: "flex", marginTop: "3px" }}>
+                                <Box className="main_box">
+                                    <div className='avatar_div'>
                                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                                             <LockOutlinedIcon />
                                         </Avatar>
-                                        <Typography component="h1" variant="h5" sx={{ marginTop: "10px" }}>
+                                        <Typography component="h1" variant="h5" className='Signup_h1'>
                                             Sign Up
                                         </Typography>
                                     </div>
@@ -243,14 +224,14 @@ export default function SignUp() {
                                             type="button"
                                             fullWidth
                                             variant="contained"
-                                            sx={{ mt: 3, mb: 2, display: 'flex', alignItems: 'center', borderRadius: "26px" }}
-                                            className="signUp-button"
+                                            sx={{ mt: 3, mb: 2}}
+                                            className="signup_button_metamask signUp-button"
                                         >
                                             <Box
                                                 component="img"
                                                 src={Metamask}
                                                 alt="Metamask Logo"
-                                                sx={{ width: '24px', height: '24px', marginRight: '8px' }}
+                                                className='Signup_metamask'
                                             />
                                             Sign Up with Metamask
                                         </Button>
