@@ -1,1 +1,1 @@
-export const FinancialTrackingSystem = "0x320726527Fd57F4dC455A796044De26B570233B7"
+export const FinancialTrackingSystem = "0xf09049Ad82f50b93bF9AE548018B3E106FA14d45"

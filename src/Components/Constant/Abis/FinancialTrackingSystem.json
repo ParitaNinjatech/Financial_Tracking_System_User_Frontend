@@ -1,622 +1,622 @@
 [
     {
-      "type": "function",
-      "name": "getAllTransactions",
       "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple[]",
-          "internalType": "struct FinancialTracking.Transaction[]",
-          "components": [
-            {
-              "name": "id",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionId",
-              "type": "string",
-              "internalType": "string"
-            },
-            {
-              "name": "sender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "moneySender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "recipient",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "status",
-              "type": "uint8",
-              "internalType": "enum FinancialTracking.Status"
-            },
-            {
-              "name": "transactionCreatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionUpdatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getFailedTransactions",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple[]",
-          "internalType": "struct FinancialTracking.Transaction[]",
-          "components": [
-            {
-              "name": "id",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionId",
-              "type": "string",
-              "internalType": "string"
-            },
-            {
-              "name": "sender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "moneySender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "recipient",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "status",
-              "type": "uint8",
-              "internalType": "enum FinancialTracking.Status"
-            },
-            {
-              "name": "transactionCreatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionUpdatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getInitiatedTransactions",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple[]",
-          "internalType": "struct FinancialTracking.Transaction[]",
-          "components": [
-            {
-              "name": "id",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionId",
-              "type": "string",
-              "internalType": "string"
-            },
-            {
-              "name": "sender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "moneySender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "recipient",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "status",
-              "type": "uint8",
-              "internalType": "enum FinancialTracking.Status"
-            },
-            {
-              "name": "transactionCreatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionUpdatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getSuccessedTransactions",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple[]",
-          "internalType": "struct FinancialTracking.Transaction[]",
-          "components": [
-            {
-              "name": "id",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionId",
-              "type": "string",
-              "internalType": "string"
-            },
-            {
-              "name": "sender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "moneySender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "recipient",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "status",
-              "type": "uint8",
-              "internalType": "enum FinancialTracking.Status"
-            },
-            {
-              "name": "transactionCreatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionUpdatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getTransactionByTransactionId",
-      "inputs": [
-        {
-          "name": "_transactionId",
-          "type": "string",
-          "internalType": "string"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple",
-          "internalType": "struct FinancialTracking.Transaction",
-          "components": [
-            {
-              "name": "id",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionId",
-              "type": "string",
-              "internalType": "string"
-            },
-            {
-              "name": "sender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "moneySender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "recipient",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "status",
-              "type": "uint8",
-              "internalType": "enum FinancialTracking.Status"
-            },
-            {
-              "name": "transactionCreatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionUpdatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getTransactionFromSpecificSender",
-      "inputs": [
-        {
-          "name": "_sender",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple[]",
-          "internalType": "struct FinancialTracking.Transaction[]",
-          "components": [
-            {
-              "name": "id",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionId",
-              "type": "string",
-              "internalType": "string"
-            },
-            {
-              "name": "sender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "moneySender",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "recipient",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "amount",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "status",
-              "type": "uint8",
-              "internalType": "enum FinancialTracking.Status"
-            },
-            {
-              "name": "transactionCreatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "transactionUpdatedAt",
-              "type": "uint256",
-              "internalType": "uint256"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "initiateTransaction",
-      "inputs": [
-        {
-          "name": "_transactionId",
-          "type": "string",
-          "internalType": "string"
-        },
-        {
-          "name": "_sender",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "_moneySender",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "_recipient",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "_amount",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "s_transactionCount",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "s_transactions",
-      "inputs": [
-        {
-          "name": "",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "outputs": [
-        {
-          "name": "id",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        {
-          "name": "transactionId",
-          "type": "string",
-          "internalType": "string"
-        },
-        {
-          "name": "sender",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "moneySender",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "recipient",
-          "type": "address",
-          "internalType": "address"
-        },
-        {
-          "name": "amount",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        {
-          "name": "status",
-          "type": "uint8",
-          "internalType": "enum FinancialTracking.Status"
-        },
-        {
-          "name": "transactionCreatedAt",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        {
-          "name": "transactionUpdatedAt",
-          "type": "uint256",
-          "internalType": "uint256"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "updateTransactionStatus",
-      "inputs": [
-        {
-          "name": "_id",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        {
-          "name": "_newStatus",
-          "type": "uint8",
-          "internalType": "enum FinancialTracking.Status"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "event",
-      "name": "StatusUpdated",
-      "inputs": [
-        {
-          "name": "id",
-          "type": "uint256",
-          "indexed": true,
-          "internalType": "uint256"
-        },
-        {
-          "name": "transactionId",
-          "type": "string",
-          "indexed": true,
-          "internalType": "string"
-        },
-        {
-          "name": "newStatus",
-          "type": "uint8",
-          "indexed": false,
-          "internalType": "enum FinancialTracking.Status"
-        },
-        {
-          "name": "transactionUpdatedAt",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "TransactionInitiated",
-      "inputs": [
-        {
-          "name": "id",
-          "type": "uint256",
-          "indexed": true,
-          "internalType": "uint256"
-        },
-        {
-          "name": "transactionId",
-          "type": "string",
-          "indexed": true,
-          "internalType": "string"
-        },
-        {
-          "name": "sender",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        },
-        {
-          "name": "moneySender",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        },
-        {
-          "name": "recipient",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        },
-        {
-          "name": "amount",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "transactionCreatedAt",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "error",
       "name": "FinancialTracking_ERRORS_Id_Cannot_Zero",
-      "inputs": []
+      "type": "error"
     },
     {
-      "type": "error",
+      "inputs": [],
       "name": "FinancialTracking_ERRORS_Invalid_Status",
-      "inputs": []
+      "type": "error"
     },
     {
-      "type": "error",
+      "inputs": [],
       "name": "FinancialTracking_ERRORS_Only_Sender_Can_Call_This_Function",
-      "inputs": []
+      "type": "error"
     },
     {
-      "type": "error",
+      "inputs": [],
       "name": "FinancialTracking_ERRORS_Sender_And_Receiver_Cant_Be_Same",
-      "inputs": []
+      "type": "error"
     },
     {
-      "type": "error",
+      "inputs": [],
       "name": "FinancialTracking_ERRORS_TranasactionId_Already_Completed",
-      "inputs": []
+      "type": "error"
     },
     {
-      "type": "error",
+      "inputs": [],
       "name": "FinancialTracking_ERRORS_TranasactionId_Doesnt_Exist",
-      "inputs": []
+      "type": "error"
     },
     {
-      "type": "error",
+      "inputs": [],
       "name": "FinancialTracking_ERRORS_TransactionId_Already_Exist",
-      "inputs": []
+      "type": "error"
     },
     {
-      "type": "error",
+      "inputs": [],
       "name": "FinancialTracking_ERRORS_TransactionId_Cannot_Be_Empty",
-      "inputs": []
+      "type": "error"
     },
     {
-      "type": "error",
+      "inputs": [],
       "name": "FinancialTracking_ERRORS_Transaction_Amount_Must_Be_Positive",
-      "inputs": []
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "transactionId",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum FinancialTracking.Status",
+          "name": "newStatus",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "transactionUpdatedAt",
+          "type": "uint256"
+        }
+      ],
+      "name": "StatusUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "string",
+          "name": "transactionId",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "moneySender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "transactionCreatedAt",
+          "type": "uint256"
+        }
+      ],
+      "name": "TransactionInitiated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "getAllTransactions",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "transactionId",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "moneySender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum FinancialTracking.Status",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionCreatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionUpdatedAt",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct FinancialTracking.Transaction[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getFailedTransactions",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "transactionId",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "moneySender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum FinancialTracking.Status",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionCreatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionUpdatedAt",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct FinancialTracking.Transaction[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getInitiatedTransactions",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "transactionId",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "moneySender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum FinancialTracking.Status",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionCreatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionUpdatedAt",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct FinancialTracking.Transaction[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getSuccessedTransactions",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "transactionId",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "moneySender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum FinancialTracking.Status",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionCreatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionUpdatedAt",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct FinancialTracking.Transaction[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_transactionId",
+          "type": "string"
+        }
+      ],
+      "name": "getTransactionByTransactionId",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "transactionId",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "moneySender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum FinancialTracking.Status",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionCreatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionUpdatedAt",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct FinancialTracking.Transaction",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_sender",
+          "type": "address"
+        }
+      ],
+      "name": "getTransactionFromSpecificSender",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "transactionId",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "moneySender",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum FinancialTracking.Status",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionCreatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionUpdatedAt",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct FinancialTracking.Transaction[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_transactionId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "_sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_moneySender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "initiateTransaction",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "s_transactionCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "s_transactions",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "transactionId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "moneySender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum FinancialTracking.Status",
+          "name": "status",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "transactionCreatedAt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "transactionUpdatedAt",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum FinancialTracking.Status",
+          "name": "_newStatus",
+          "type": "uint8"
+        }
+      ],
+      "name": "updateTransactionStatus",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ]
