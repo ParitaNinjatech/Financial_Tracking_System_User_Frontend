@@ -19,10 +19,7 @@ interface TrackTransaction {
 
 const TrackTransaction: React.FC<TrackTransaction> = ({
     showTransactionModal,
-    setShowTransactionModal,
-    scanLink,
-    contractAddress,
-    transaction
+    setShowTransactionModal
 }) => {
 
     const activities = [
