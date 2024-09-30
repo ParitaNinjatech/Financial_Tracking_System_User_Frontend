@@ -36,6 +36,14 @@ const sepolia = {
   rpcUrl: 'https://sepolia.infura.io/v3/2EydPKGqmXcXAKly2TBkdObNCHk'
 }
 
+const XDCTestnet = {
+  chainId: 51,
+  name: 'XDCApothemNetwork',
+  currency: 'TXDC',
+  explorerUrl: 'https://apothem.xinfinscan.com',
+  rpcUrl: 'https://erpc.apothem.network'
+}
+
 
 const metadata = {
   name: 'My Website',
@@ -55,7 +63,7 @@ const ethersConfig = defaultConfig({
 
 createWeb3Modal({
   ethersConfig,
-  chains: [mainnet, bscTestnet, polygonMumbai, sepolia],
+  chains: [mainnet, bscTestnet, polygonMumbai, sepolia,XDCTestnet],
   projectId,
   enableAnalytics: true
 })

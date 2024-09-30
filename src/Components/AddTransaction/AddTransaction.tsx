@@ -1,13 +1,42 @@
 import React, { useState } from 'react'
 import './AddTransaction.css'
 import { Box, Typography, Grid, TextField, FormControl, Button, InputLabel, Select, MenuItem } from '../../common/Index'
-import { useWeb3ModalAccount } from "@web3modal/ethers5/react";
+import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers5/react";
 import { useWeb3Modal } from "@web3modal/ethers5/react"
+import { ethers } from 'ethers';
+import { FinancialObj } from '../Constant/ContractObject';
 
 function AddTransaction() {
-  const [status, setStatus] = useState<number>(3)
-  const { isConnected } = useWeb3ModalAccount();
-  const { open } = useWeb3Modal()
+  const [status, setStatus] = useState<number>(3);
+  const [from, setFrom] = useState<string>('')
+  const [to, setTo] = useState<string>('')
+  const [amount, setAmount] = useState<number>(0)
+  const { isConnected, address } = useWeb3ModalAccount();
+  const { walletProvider } = useWeb3ModalProvider();
+  const { open } = useWeb3Modal();
+
+  const Initiate = async () => {
+    try {
+      if (walletProvider) {
+        const provider = new ethers.providers.Web3Provider(walletProvider);
+        const signer = provider.getSigner();
+        const contractObj = await FinancialObj(signer)
+
+        const amounttoString = ethers.utils.parseUnits(amount.toString());
+        console.log(amounttoString.toString(),"amount",amount.toString());
+        console.log(from,to,"from,to");
+        
+        const tx = await contractObj.initiateTransaction("1",address,from,to,amounttoString.toString());
+        await tx.wait()
+        console.log(tx.hash,"Hash");
+        
+      } else {
+        alert("Please Connect Wallet Properly")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className='background-image'>
       <div className='box-Container'>
@@ -31,6 +60,8 @@ function AddTransaction() {
                     fullWidth
                     id="From"
                     label="From"
+                    value={from}
+                    onChange={(e) => setFrom(e.target.value)}
                     autoFocus
                   />
                 </Grid>
@@ -41,6 +72,8 @@ function AddTransaction() {
                     id="to"
                     label="To"
                     name="to"
+                    value={to}
+                    onChange={(e) => setTo(e.target.value)}
                     autoComplete="to"
                   />
                 </Grid>
@@ -51,6 +84,8 @@ function AddTransaction() {
                     id="outlined-number"
                     label="Amount"
                     type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(Number(e.target.value))}
                     slotProps={{
                       inputLabel: {
                         shrink: true,
@@ -83,6 +118,7 @@ function AddTransaction() {
                     variant="contained"
                     sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
                     className='Add-button'
+                    onClick={()=>Initiate()}
                   >
                     Add Transaction
                   </Button>) : (
@@ -91,8 +127,8 @@ function AddTransaction() {
                       variant="contained"
                       sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
                       className='Add-button'
-                      type="button"  
-                      onClick={() => open()}  
+                      type="button"
+                      onClick={() => open()}
                     >
                       Connect Wallet
                     </Button>
@@ -101,76 +137,6 @@ function AddTransaction() {
                 }
               </Grid>
             </Box>
-
-            {/* <Typography variant="h6" style={{ fontWeight: "bold",marginTop:"24px" }}>Agents Information</Typography>
-            <Box component="form" noValidate sx={{ mt: 3 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    autoComplete="Agent A"
-                    name="Agent A"
-                    value={"Part"}
-                    fullWidth
-                    id="Agent A"
-                    disabled
-                    sx={{ backgroundColor: "lightgray" }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="agent b"
-                    label="Agent B"
-                    name="agent b"
-                    autoComplete="agent b"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth variant="outlined">
-                    <PhoneInput
-                      country={'us'}
-                      value={phoneNumber}
-                      onChange={setPhoneNumber}
-                      inputProps={{
-                        name: 'phone',
-                        required: true,
-                        id: 'phoneNumber',
-                      }}
-                      containerStyle={{
-                        width: '100%',
-                      }}
-                      inputStyle={{
-                        height: '56px',
-                        width: '100%',
-                        borderRadius: '4px',
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
-                className='Add-button'
-              >
-                Add Transaction
-              </Button>
-
-            </Box> */}
           </Box>
         </Box>
       </div>
