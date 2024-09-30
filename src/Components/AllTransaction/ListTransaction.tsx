@@ -1,16 +1,28 @@
 import React, { useState } from 'react'
 import {
     Grid, Card, CardContent, Typography, TableContainer, Table, TableHead, TableRow,
-    TableCell, TableBody, Box, IconButton, VisibilityIcon
+    TableCell, TableBody, Box, IconButton, VisibilityIcon, EditIcon
 } from "../../common/Index";
 import './ListTransaction.css'
 import TrackTransaction from "../TrackTransaction/TrackTransaction"
+import UpdateStatus from '../UpdateStatus/UpdateStatus';
+interface Transaction {
+    SenderName: string;
+    recipient: string;
+    Hash: string;
+    Amount: number;
+    CreatedAt: string;
+    UpdatedAt: string;
+    Status: string;
+}
 
 function ListTransaction() {
     const [currentPage, setCurrentPage] = useState(0);
     const [showTransactionModal, setShowTransactionModal] = useState(false)
+    const [showUpdateModal, setShowUpdateModal] = useState(false);
+    const [selectTransactionData, setSelectTransactionData] = useState<Transaction | null>(null);
     const itemsPerPage = 10;
-    
+
 
     const transaction = [
         { SenderName: 'Air Jordan', recipient: 'Shoes', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
@@ -48,7 +60,7 @@ function ListTransaction() {
     };
     return (
         <><div className='background-image'>
-            <div className='box-Container'>
+            <div className='box-Container_List'>
                 <Box
                     sx={{
                         backgroundColor: '#fff',
@@ -116,7 +128,7 @@ function ListTransaction() {
                                 <TableBody>
                                     {displayedTransaction.map((tx, i) => (
                                         <TableRow key={i + 1}>
-                                            <TableCell>{i + 1}</TableCell>
+                                            <TableCell>{currentPage * itemsPerPage + i + 1}</TableCell>
                                             <TableCell>{tx.SenderName}</TableCell>
                                             <TableCell>{tx.recipient}</TableCell>
                                             <TableCell>
@@ -136,6 +148,9 @@ function ListTransaction() {
                                                 </span>
                                             </TableCell>
                                             <TableCell>
+                                                <IconButton onClick={() => (setSelectTransactionData(tx), setShowUpdateModal(true))}>
+                                                    <EditIcon />
+                                                </IconButton>
                                                 <IconButton onClick={() => setShowTransactionModal(true)}>
                                                     <VisibilityIcon />
                                                 </IconButton>
@@ -165,7 +180,13 @@ function ListTransaction() {
             <TrackTransaction showTransactionModal={showTransactionModal} setShowTransactionModal={setShowTransactionModal} scanLink={"scanLink"}
                 contractAddress={"contractAddress"}
                 transaction={"transaction"} />
-        </>
+            {selectTransactionData && (
+                <UpdateStatus
+                    showUpdateModal={showUpdateModal}
+                    setShowUpdateModal={setShowUpdateModal}
+                    transactionId={selectTransactionData}
+                />
+            )}        </>
 
 
     )

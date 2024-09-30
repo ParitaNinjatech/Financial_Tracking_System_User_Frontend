@@ -1,4 +1,4 @@
-.background-image {
+.background-image-Veri {
     background-image: url('/home/ninjatech/Desktop/Live_Project/Financial_Tracking_System_User_frontend/src/assets/BackGroundImage.png');
     background-size: cover;
     background-position: center;
@@ -7,35 +7,16 @@
   }
 
 
-.box-Container{
+
+  .box-Container-Veri{
     padding: 0px;
     margin-top: 0;
     margin-left: 375px !important;
     width: 60% !important;
 }
 
-.Action{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
-  }
 
-
-.table-row{
-    font-weight: bold !important;
-  }
-
-
-.Main_Box{
-   background-color: #fff;
-   padding: 15px;
-   border-radius: 8px;
-   box-shadow: 0px 4px 12px rgba(0, 0, 0,0,1);
-
-}
-
-.Second_container{
+.Second_container-Veri{
     background-color: #fff;
     height: auto;
     margin-top: 20px;
@@ -44,9 +25,9 @@
     padding: 20px;
 }
 
-.Add-button{
+.OTP{
     width: 16% !important;
-    margin-left: 42% !important;
+    margin-left: 31% !important;
     height: 51px;
     background-color: #1976d2;
 

@@ -1,10 +1,12 @@
-import { Routes, Route } from 'react-router-dom';
-import { SignUp, Signin,Header,Footer,ContactUs,Profile,ForgotPassword,AddTransaction,ListTransaction } from "../index";
+import { Routes, Route,useLocation } from 'react-router-dom';
+import { SignUp, Signin,Header,Footer,ContactUs,Profile,ForgotPassword,AddTransaction,ListTransaction,Verification } from "../index";
 
 const AppRoutes = () => {
+  const location = useLocation();
+  const noHeaderRoutes = ['/verification']; 
   return (
     <>
-      <Header />
+      { !noHeaderRoutes.includes(location.pathname) && <Header />  }
       <Routes>
         <Route path='/signup' element={<SignUp />} />
         <Route path='/signIn' element={<Signin />} />
@@ -13,8 +15,9 @@ const AppRoutes = () => {
         <Route path='/forgotPassword' element={<ForgotPassword />} />
         <Route path='/addTransaction' element={<AddTransaction />} />
         <Route path='/listTransaction' element={<ListTransaction />} />
+        <Route path='/verification' element={<Verification />} />
       </Routes>
-      <Footer/>
+      { !noHeaderRoutes.includes(location.pathname) && <Footer />  }
     </>
   );
 };

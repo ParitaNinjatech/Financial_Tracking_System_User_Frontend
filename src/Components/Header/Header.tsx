@@ -21,7 +21,7 @@ export default function Header() {
       position="relative"
       sx={{
         borderBottom: '1px solid #ddd',
-        background: 'rgba(0, 0, 0, 0.54);',
+        background: '#1976d2;',
         backgroundBlendMode: 'screen',
       }}
     >
@@ -41,21 +41,21 @@ export default function Header() {
           <Link
             variant="button"
             href="/addTransaction"
-            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white",fontWeight:"bold" }}
+            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
           >
             Initiate Transaction
           </Link>
           <Link
             variant="button"
             href="/listTransaction"
-            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white",fontWeight:"bold"  }}
+            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
           >
             List Transaction
           </Link>
           <Link
             variant="button"
             href="/contactus"
-            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white",fontWeight:"bold"  }}
+            sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
           >
             Contact
           </Link>
@@ -63,13 +63,15 @@ export default function Header() {
         <IconButton sx={{ ml: 1, color: "white" }}>
           <SearchIcon />
         </IconButton>
-        <Button href="/signIn" sx={{ my: 1, mx: 1.5, color: "white",fontWeight:"bold"  }}>
+        <Button href="/signIn" sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
           SignIn
         </Button>
-        <Button href="/signup" sx={{ my: 1, mx: 1.5, color: "white",fontWeight:"bold"  }}>
+        <Button href="/signup" sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
           SignUp
         </Button>
-
+        <Button sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
+          <w3m-button />
+        </Button>
         {auth && (
           <div>
             <IconButton

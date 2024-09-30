@@ -7,6 +7,7 @@ import Profile from "./Profile/Profile"
 import ForgotPassword from "./ForgotPassword/ForgotPassword";
 import AddTransaction from './AddTransaction/AddTransaction';
 import ListTransaction from "./AllTransaction/ListTransaction";
-import TrackTransaction from "./TrackTransaction/TrackTransaction"
+import TrackTransaction from "./TrackTransaction/TrackTransaction";
+import Verification from "./Verification /Verification";
 
-export {SignUp,Signin,Header,Footer,ContactUs,Profile,ForgotPassword,AddTransaction,ListTransaction,TrackTransaction}
+export {SignUp,Signin,Header,Footer,ContactUs,Profile,ForgotPassword,AddTransaction,ListTransaction,TrackTransaction,Verification}

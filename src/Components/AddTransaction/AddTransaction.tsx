@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import './AddTransaction.css'
 import { Box, Typography, Grid, TextField, FormControl, Button, InputLabel, Select, MenuItem } from '../../common/Index'
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css'; 
+import { useWeb3ModalAccount } from "@web3modal/ethers5/react";
+import { useWeb3Modal } from "@web3modal/ethers5/react"
 
 function AddTransaction() {
   const [status, setStatus] = useState<number>(3)
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const { isConnected } = useWeb3ModalAccount();
+  const { open } = useWeb3Modal()
   return (
     <div className='background-image'>
       <div className='box-Container'>
@@ -22,7 +23,7 @@ function AddTransaction() {
             <Typography variant="h6" style={{ fontWeight: "bold" }}>User Information</Typography>
             <Box component="form" noValidate sx={{ mt: 3 }}>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <TextField
                     autoComplete="From"
                     name="From"
@@ -33,7 +34,7 @@ function AddTransaction() {
                     autoFocus
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <TextField
                     required
                     fullWidth
@@ -75,10 +76,33 @@ function AddTransaction() {
                     </Select>
                   </FormControl>
                 </Grid>
+                {
+                  isConnected ? (<Button
+                    type="button"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
+                    className='Add-button'
+                  >
+                    Add Transaction
+                  </Button>) : (
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
+                      className='Add-button'
+                      type="button"  
+                      onClick={() => open()}  
+                    >
+                      Connect Wallet
+                    </Button>
+
+                  )
+                }
               </Grid>
             </Box>
 
-            <Typography variant="h6" style={{ fontWeight: "bold",marginTop:"24px" }}>Agents Information</Typography>
+            {/* <Typography variant="h6" style={{ fontWeight: "bold",marginTop:"24px" }}>Agents Information</Typography>
             <Box component="form" noValidate sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -146,7 +170,7 @@ function AddTransaction() {
                 Add Transaction
               </Button>
 
-            </Box>
+            </Box> */}
           </Box>
         </Box>
       </div>
