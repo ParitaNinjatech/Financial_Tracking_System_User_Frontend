@@ -89,6 +89,7 @@ export default function Signin() {
                           <FormControlLabel
                             control={<Checkbox value="allowExtraEmails" color="primary" />}
                             label="I agree all statements in Terms of service."
+                            required
                           />
                         </Grid>
                       </Grid>
