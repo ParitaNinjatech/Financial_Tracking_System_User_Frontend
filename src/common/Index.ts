@@ -56,6 +56,7 @@ import {
   TimelineDot,
 } from '@mui/lab';
 import { AccessTime } from '@mui/icons-material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 export{
     Avatar,
     Button,
@@ -110,5 +111,6 @@ export{
     TimelineConnector,
     TimelineContent,
     TimelineDot,
-    AccessTime
+    AccessTime,
+    ContentCopyIcon
 }

@@ -95,8 +95,11 @@ function AddTransaction() {
         }
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Something was not right. Try again later")
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.error || "An error occurred");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   }
   return (
@@ -170,8 +173,8 @@ function AddTransaction() {
                     >
                       <MenuItem value={3}>Please Select Status</MenuItem>
                       <MenuItem value={0}>Initiate</MenuItem>
-                      <MenuItem value={1}>Pending</MenuItem>
-                      <MenuItem value={2}>Confirm</MenuItem>
+                      <MenuItem value={1}>Completed</MenuItem>
+                      <MenuItem value={2}>Cancel</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

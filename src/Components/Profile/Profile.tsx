@@ -50,6 +50,8 @@ const Profile = () => {
                     phoneNumber: formData.phoneNumber,
                     walletAddress: formData.walletAddress,
                 };
+                console.log(user.userId,"user.userId");
+                
                 const response = await axios.put(`${Backend_EndPoint}api/v1/user/${user.userId}`, payload, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -57,7 +59,7 @@ const Profile = () => {
                     },
                 });
                 if (response.status === 200) {
-                    toast.success("Admin Update Data Successfully");
+                    toast.success("Agent Update Data Successfully");
                     setTimeout(() => {
                         window.location.reload();
                     }, 3000);
@@ -87,7 +89,6 @@ const Profile = () => {
                         'Content-Type': 'application/json',
                     },
                 });
-                console.log(response.data,"response.data");
                 
                 const { username, email, password, phoneNumber, walletAddress } = response.data;
                 setFormData({ username, email, password, phoneNumber, walletAddress });

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Grid, Card, CardContent, Typography, TableContainer, Table, TableHead, TableRow,
     TableCell, TableBody, Box, IconButton, VisibilityIcon, EditIcon
@@ -6,46 +6,61 @@ import {
 import './ListTransaction.css'
 import TrackTransaction from "../TrackTransaction/TrackTransaction"
 import UpdateStatus from '../UpdateStatus/UpdateStatus';
-interface Transaction {
-    SenderName: string;
-    recipient: string;
-    Hash: string;
-    Amount: number;
-    CreatedAt: string;
-    UpdatedAt: string;
-    Status: string;
+import { format } from 'date-fns';
+import axios from 'axios';
+import { Backend_EndPoint } from '../Constant/EndPoints';
+
+
+interface TransactionList {
+    _id: string,
+    txId: string,
+    from: string,
+    to: string,
+    agentA: string,
+    agentB: string,
+    amount: string,
+    index: number,
+    Status: string,
+    OTP: string,
+    createdAt: string,
+    updatedAt: string
 }
 
 function ListTransaction() {
     const [currentPage, setCurrentPage] = useState(0);
     const [showTransactionModal, setShowTransactionModal] = useState(false)
     const [showUpdateModal, setShowUpdateModal] = useState(false);
-    const [selectTransactionData, setSelectTransactionData] = useState<Transaction | null>(null);
+    const [selectTransactionData, setSelectTransactionData] = useState<TransactionList | null>(null);
+    const [transactionList, setTransactionList] = useState<TransactionList[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const itemsPerPage = 10;
+    const token = localStorage.getItem('jwtToken');
 
 
-    const transaction = [
-        { SenderName: 'Air Jordan', recipient: 'Shoes', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'Amazon Fire TV', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-        { SenderName: 'Apple iPad', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'Apple Watch Series 7', recipient: 'Accessories', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-        { SenderName: 'BANGE Anti Theft Backpack', recipient: 'Accessories', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'Canon EOS Rebel T7', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'Air Jordan', recipient: 'Shoes', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'Amazon Fire TV', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'Apple iPad', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-        { SenderName: 'Apple Watch Series 7', recipient: 'Accessories', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-        { SenderName: 'BANGE Anti Theft Backpack', recipient: 'Accessories', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-        { SenderName: 'Canon EOS Rebel T7', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'Air Jordan', recipient: 'Shoes', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-        { SenderName: 'Amazon Fire TV', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'Apple iPad', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-        { SenderName: 'Apple Watch Series 7', recipient: 'Accessories', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Confirmed" },
-        { SenderName: 'BANGE Anti Theft Backpack', recipient: 'Accessories', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-        { SenderName: 'Canon EOS Rebel T7', recipient: 'Electronics', Hash: "0xf326Dec1A1A5e18292B2E341B03cB23E2e08960B", Amount: 1234567891, CreatedAt: "26,sep 2024", UpdatedAt: '26,sep 2024', Status: "Pending" },
-    ];
-    const totalPages = Math.ceil(transaction.length / itemsPerPage);
-    const displayedTransaction = transaction.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+    const FetchListTransaction = async () => {
+        try {
+            setIsLoading(false)
+            if (token) {
+                const response = await axios.get(`${Backend_EndPoint}api/v1/transaction/agent-transactions`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                console.log(response.data, "response");
+                if (response.status === 200) {
+                    setTransactionList(response.data)
+                }
+            }
+        } catch (error) {
+
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const totalPages = Math.ceil(transactionList.length / itemsPerPage);
+    const displayedTransaction = transactionList.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
@@ -58,6 +73,12 @@ function ListTransaction() {
             setCurrentPage(prevPage => prevPage - 1);
         }
     };
+
+    useEffect(() => {
+        if (token) {
+            FetchListTransaction()
+        }
+    }, [])
     return (
         <><div className='background-image'>
             <div className='box-Container_List'>
@@ -110,69 +131,85 @@ function ListTransaction() {
                             padding: '20px',
                         }}
                     >
-                        <TableContainer>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell className='table-row'>No.</TableCell>
-                                        <TableCell className='table-row'>SenderName</TableCell>
-                                        <TableCell className='table-row'>Recipient</TableCell>
-                                        <TableCell className='table-row'>Transaction Hash</TableCell>
-                                        <TableCell className='table-row'>Amount</TableCell>
-                                        <TableCell className='table-row'>CreatedAt</TableCell>
-                                        <TableCell className='table-row'>UpdatedAt</TableCell>
-                                        <TableCell className='table-row'>Status</TableCell>
-                                        <TableCell className='table-row'>Action</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {displayedTransaction.map((tx, i) => (
-                                        <TableRow key={i + 1}>
-                                            <TableCell>{currentPage * itemsPerPage + i + 1}</TableCell>
-                                            <TableCell>{tx.SenderName}</TableCell>
-                                            <TableCell>{tx.recipient}</TableCell>
-                                            <TableCell>
-                                                {(tx.Hash).slice(0, 6)}....{(tx.Hash).slice(-4)}
-                                            </TableCell>
-                                            <TableCell>{tx.Amount}</TableCell>
-                                            <TableCell>{tx.CreatedAt}</TableCell>
-                                            <TableCell>{tx.UpdatedAt}</TableCell>
-                                            <TableCell>
-                                                <span
-                                                    style={{
-                                                        color: tx.Status === 'Confirmed' ? 'blue' : 'red',
-                                                        fontWeight: 'bold'
-                                                    }}
-                                                >
-                                                    {tx.Status}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell>
-                                                <IconButton onClick={() => (setSelectTransactionData(tx), setShowUpdateModal(true))}>
-                                                    <EditIcon />
-                                                </IconButton>
-                                                <IconButton onClick={() => setShowTransactionModal(true)}>
-                                                    <VisibilityIcon />
-                                                </IconButton>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                        {
+                            isLoading ? (
+                                <TableContainer>
+                                    <span className="loader2_transaction"></span>
+                                </TableContainer>
+                            ) : displayedTransaction.length > 0 ? (
+                                <>
+                                    <TableContainer>
+                                        <Table>
+                                            <TableHead>
+                                                <TableRow sx={{ gap: "2px" }}>
+                                                    <TableCell className='table-row'>No.</TableCell>
+                                                    <TableCell className='table-row'>TxId</TableCell>
+                                                    <TableCell className='table-row'>From</TableCell>
+                                                    <TableCell className='table-row'>To</TableCell>
+                                                    <TableCell className='table-row'>Agent</TableCell>
+                                                    <TableCell className='table-row'>Amount</TableCell>
+                                                    <TableCell className='table-row'>Index</TableCell>
+                                                    <TableCell className='table-row'>CreatedAt</TableCell>
+                                                    <TableCell className='table-row'>UpdatedAt</TableCell>
+                                                    <TableCell className='table-row'>Status</TableCell>
+                                                    <TableCell className='table-row'>Action</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {displayedTransaction.map((tx, i) => (
+                                                    <TableRow key={i + 1}>
+                                                        <TableCell>{currentPage * itemsPerPage + i + 1}</TableCell>
+                                                        <TableCell>{tx.txId}</TableCell>
+                                                        <TableCell>{(tx.from).slice(0, 6)}....{(tx.from).slice(-4)}</TableCell>
+                                                        <TableCell>
+                                                            {(tx.to).slice(0, 6)}....{(tx.to).slice(-4)}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {(tx.agentA).slice(0, 6)}....{(tx.agentA).slice(-4)}
+                                                        </TableCell>
+                                                        <TableCell>{tx.amount}</TableCell>
+                                                        <TableCell>{tx.index}</TableCell>
+                                                        <TableCell>{format(new Date(tx.createdAt), 'd MMM, yyyy HH:mm aa')}</TableCell>
+                                                        <TableCell>{format(new Date(tx.updatedAt), 'd MMM, yyyy HH:mm aa')}</TableCell>
+                                                        <TableCell>
+                                                            <span
+                                                                style={{
+                                                                    color: tx.Status === 'Completed' ? 'blue' : 'Initiated' ? 'green' : 'red',
+                                                                    fontWeight: 'bold'
+                                                                }}
+                                                            >
+                                                                {tx.Status}
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <IconButton onClick={() => (setSelectTransactionData(tx), setShowUpdateModal(true))}>
+                                                                <EditIcon />
+                                                            </IconButton>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                                        <button onClick={handlePrevPage} disabled={currentPage === 0}>
+                                            Previous
+                                        </button>
+                                        <Typography variant="body1">
+                                            Page {currentPage + 1} of {totalPages}
+                                        </Typography>
+                                        <button onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
+                                            Next
+                                        </button>
+                                    </Box>
+                                </>
+                            ) : (
+                                <TableContainer>
+                                    <h4 style={{ marginLeft: "45%" }}>Transaction Not Found</h4>
+                                </TableContainer>
+                            )
+                        }
 
-                        {/* Pagination Controls */}
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                            <button onClick={handlePrevPage} disabled={currentPage === 0}>
-                                Previous
-                            </button>
-                            <Typography variant="body1">
-                                Page {currentPage + 1} of {totalPages}
-                            </Typography>
-                            <button onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
-                                Next
-                            </button>
-                        </Box>
                     </Box>
                 </Box>
             </div>
@@ -186,7 +223,8 @@ function ListTransaction() {
                     setShowUpdateModal={setShowUpdateModal}
                     transactionId={selectTransactionData}
                 />
-            )}        </>
+            )}
+        </>
 
 
     )

@@ -41,3 +41,26 @@
  background-color: white;
  padding: 20px;
 }
+
+
+.loader2_transaction {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #1b1b2f;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  margin-left: 49%;
+
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
