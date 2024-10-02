@@ -12,29 +12,90 @@ import {
   Card,
   CardContent, Grid, LockOutlinedIcon, createTheme, ThemeProvider
 } from "../../common/Index"
-import { Metamask } from '../../assets/Image';
-import React from 'react'
+import { useState } from "react";
+import { Backend_EndPoint } from "../Constant/EndPoints";
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const theme = createTheme();
+
 export default function Signin() {
+  const [userName, setUserName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      setIsLoading(true);
+      const payload = {
+        username: userName,
+        password: password,
+        email: email
+      };
+
+      const response = await axios.post(`${Backend_EndPoint}api/v1/user/login`, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Agent Login Successfully");
+        localStorage.setItem('jwtToken', response.data.token);
+
+        setTimeout(() => {
+          window.location.href = '/addTransaction';
+        }, 3000);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        toast.error(error.response.data.error || "An error occurred");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(e.target.value);
+    if (e.target.value !== '') {
+      setEmail('');
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (e.target.value !== '') {
+      setUserName('');
+    }
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
         <Container
           component="main"
           maxWidth={false}
-        className="container">
+          className="container"
+        >
           <CssBaseline />
+          <ToastContainer />
           <Grid container spacing={2} className="container_title">
             <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' }, pr: 10 }}>
-              <Box >
+              <Box>
                 <Typography variant="h4" gutterBottom sx={{ color: "maroon", mb: 4 }}>
                   Welcome to the Financial Tracking System
                 </Typography>
               </Box>
             </Grid>
 
-            {/* Right Side - Sign Up Form */}
-            <Grid item xs={12} md={4} sx={{ pl: 8 }} >
+            {/* Right Side - Sign In Form */}
+            <Grid item xs={12} md={4} sx={{ pl: 8 }}>
               <Card sx={{ p: 3 }}>
                 <CardContent>
                   <Box className="main_box">
@@ -44,7 +105,7 @@ export default function Signin() {
                     <Typography component="h1" variant="h5">
                       Sign In
                     </Typography>
-                    <Box component="form" noValidate sx={{ mt: 3 }}>
+                    <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit}>
                       <Grid container spacing={2}>
                         <Grid item xs={12}>
                           <TextField
@@ -54,6 +115,9 @@ export default function Signin() {
                             label="User Name"
                             name="username"
                             autoComplete="username"
+                            value={userName}
+                            onChange={handleUserNameChange}
+                            disabled={!!email} 
                           />
                         </Grid>
                         <Grid item xs={12}>
@@ -64,9 +128,12 @@ export default function Signin() {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
+                            value={email}
+                            onChange={handleEmailChange}
+                            disabled={!!userName} 
                           />
                         </Grid>
-                        
+
                         <Grid item xs={12}>
                           <TextField
                             required
@@ -76,6 +143,8 @@ export default function Signin() {
                             type="password"
                             id="password"
                             autoComplete="new-password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                         </Grid>
                         <Grid container justifyContent="flex-end">
@@ -88,7 +157,7 @@ export default function Signin() {
                         <Grid item xs={12}>
                           <FormControlLabel
                             control={<Checkbox value="allowExtraEmails" color="primary" />}
-                            label="I agree all statements in Terms of service."
+                            label="I agree to all statements in Terms of service."
                             required
                           />
                         </Grid>
@@ -100,23 +169,7 @@ export default function Signin() {
                         sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
                         className='signUp-button'
                       >
-                        Sign In
-                      </Button>
-
-                      <Button
-                        type="button"
-                        fullWidth
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2}}
-                        className="signup_button_metamask signUp-button"
-                      >
-                        <Box
-                          component="img"
-                          src={Metamask}
-                          alt="Metamask Logo"
-                         className="Signup_metamask"
-                        />
-                        Sign In with Metamask
+                        {isLoading ? (<span className="loader"></span>) : "Sign In"}
                       </Button>
                       <Grid container justifyContent="flex-end">
                         <Grid item>
@@ -130,10 +183,9 @@ export default function Signin() {
                 </CardContent>
               </Card>
             </Grid>
-
           </Grid>
         </Container>
       </ThemeProvider>
     </>
-  )
+  );
 }

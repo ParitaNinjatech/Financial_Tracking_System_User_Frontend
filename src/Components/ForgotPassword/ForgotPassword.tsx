@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import {
     Avatar,
     Button,
@@ -17,12 +17,53 @@ import {
     createTheme,
     ThemeProvider
 } from "../../common/Index"
-import { BackGroundImage } from "../../assets/Image" 
 import "./ForgotPassword.css"
-
+import { Backend_EndPoint } from '../Constant/EndPoints';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const theme = createTheme();
 
 function ForgotPassword() {
+    const [email, setEmail] = useState<string>('')
+    const [oldPassword, setOldPassword] = useState<string>('');
+    const [newPassword, setNewPassword] = useState<string>('');
+    const [isLoading, setIsloading] = useState<boolean>(false);
+
+    const forgotPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            setIsloading(true);
+            const payload = {
+                email: email,
+                newPassword: newPassword
+            }
+            const response = await axios.post(`${Backend_EndPoint}api/v1/user/forgot-password`, payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            if (response.status === 200) {
+                toast.success("Admin Change Password SuccessFully")
+        
+                setTimeout(() => {
+                  window.location.href = '/signIn';
+                }, 3000);
+              }
+
+        } catch (error) {
+            console.log(error);
+            if (axios.isAxiosError(error) && error.response) {
+                toast.error(error.response.data.error || "An error occurred");
+              } else {
+                toast.error("An unexpected error occurred");
+              }
+
+        }finally{
+            setIsloading(false)
+        }
+    }
     return (
         <ThemeProvider theme={theme}>
             <Container
@@ -31,6 +72,7 @@ function ForgotPassword() {
                 className='container'
             >
                 <CssBaseline />
+                <ToastContainer/>
                 <Grid container spacing={2} className='container_title'>
                     <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' }, pr: 10 }}>
                         <Box>
@@ -53,7 +95,7 @@ function ForgotPassword() {
                                     <Typography component="h1" variant="h5">
                                         Forgot Password
                                     </Typography>
-                                    <Box component="form" noValidate sx={{ mt: 3 }}>
+                                    <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={forgotPassword}>
                                         <Grid container spacing={2}>
                                             <Grid item xs={12}>
                                                 <TextField
@@ -63,6 +105,8 @@ function ForgotPassword() {
                                                     label="Email Address"
                                                     name="email"
                                                     autoComplete="email"
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
@@ -74,17 +118,21 @@ function ForgotPassword() {
                                                     type="password"
                                                     id="password"
                                                     autoComplete="current-password"
+                                                    value={oldPassword}
+                                                    onChange={(e) => setOldPassword(e.target.value)}
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
                                                 <TextField
                                                     required
                                                     fullWidth
-                                                    name="newPassword"
-                                                    label="New Password"
+                                                    name="password"
+                                                    label="Password"
                                                     type="password"
-                                                    id="new-password"
+                                                    id="password"
                                                     autoComplete="new-password"
+                                                    value={newPassword}
+                                                    onChange={(e) => setNewPassword(e.target.value)}
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
@@ -101,7 +149,7 @@ function ForgotPassword() {
                                             sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
                                             className='forgotPassword-button'
                                         >
-                                            Forgot Password
+                                          {isLoading ? ( <span className="loader"></span>):("Forgot Password")}
                                         </Button>
                                         <Grid container justifyContent="flex-end">
                                             <Grid item>

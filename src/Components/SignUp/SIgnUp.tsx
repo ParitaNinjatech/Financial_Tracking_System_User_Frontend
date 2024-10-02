@@ -216,7 +216,7 @@ export default function SignUp() {
                                             )}
                                         </Button>
 
-                                        <Button
+                                        {/* <Button
                                             type="button"
                                             fullWidth
                                             variant="contained"
@@ -230,7 +230,7 @@ export default function SignUp() {
                                                 className='Signup_metamask'
                                             />
                                             Sign Up with Metamask
-                                        </Button>
+                                        </Button> */}
                                         <Grid container justifyContent="flex-end">
                                             <Grid item>
                                                 <Link href="/signIn" variant="body2">

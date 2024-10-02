@@ -20,11 +20,13 @@ function AddTransaction() {
   const { isConnected, address } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
   const { open } = useWeb3Modal();
+  const token = localStorage.getItem('jwtToken');
+
 
   const Initiate = async () => {
     try {
       setIsLoading(true)
-      if (walletProvider) {
+      if (walletProvider && token) {
         const provider = new ethers.providers.Web3Provider(walletProvider);
         const signer = provider.getSigner();
         const contractObj = await FinancialObj(signer)
@@ -74,6 +76,7 @@ function AddTransaction() {
 
               const response = await axios.post(`${Backend_EndPoint}api/v1/transaction/`, payload, {
                 headers: {
+                  'Authorization': `Bearer ${token}`,
                   'Content-Type': 'application/json',
                 },
               });
@@ -144,7 +147,8 @@ function AddTransaction() {
                     id="outlined-number"
                     label="Amount"
                     type="number"
-                    value={amount}
+                    placeholder='0'
+                    value={amount === 0 ? '' : amount}
                     onChange={(e) => setAmount(Number(e.target.value))}
                     slotProps={{
                       inputLabel: {
@@ -180,7 +184,7 @@ function AddTransaction() {
                     className='Add-button'
                     onClick={() => Initiate()}
                   >
-                    Add Transaction
+                    {isLoading ? (<span className="loader_Add_Tx"></span>) : "Add Transaction"}
                   </Button>) : (
                     <Button
                       fullWidth

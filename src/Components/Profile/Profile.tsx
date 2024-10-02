@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
-import { Avatar, Box, Card, CardContent, Grid, Typography, EditIcon, IconButton, TextField, Button } from '../../common/Index';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Box, Card, CardContent, Grid, Typography, IconButton, TextField, Button, EditIcon, Link } from '../../common/Index';
 import './Profile.css';
-import {Dog} from "../../assets/Image"
+import { jwtDecode } from 'jwt-decode';
+import { Dog } from "../../assets/Image";
+import { Backend_EndPoint } from '../Constant/EndPoints';
+import axios from "axios"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+interface formdata {
+    username: string,
+    email: string,
+    password: string,
+    phoneNumber: string,
+    walletAddress: string
+}
 
 const Profile = () => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({
-        fullName: 'Johnathan Doe',
-        email: 'johnathan@admin.com',
-        password: '*********',
-        phone: '123 456 7890',
-        Address: 'Lorem ipsum dolor sit amet.',
-        WalletAddress: "0xfC11F0080C6fA8b3F7caE4C5fb9f83BBbcb96197",
-        postCode: "382330",
-        City: "Ahmedabad"
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [formData, setFormData] = useState<formdata>({
+        username: '',
+        email: '',
+        password: '',
+        phoneNumber: '',
+        walletAddress: ''
     });
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isUpdateLoading, setIsUpdateLoading] = useState<boolean>(false);
+    const token = localStorage.getItem('jwtToken');
 
     const handleEditClick = () => {
         setIsEditing(!isEditing);
@@ -25,17 +38,80 @@ const Profile = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleUpdate = () => {
-        console.log('Updated data:', formData);
-        setIsEditing(false);
+    const handleUpdate = async () => {
+        try {
+            setIsUpdateLoading(true)
+            if (token) {
+                const user: any = jwtDecode(token);
+                const payload = {
+                    username: formData.username,
+                    email: formData.email,
+                    password: formData.password,
+                    phoneNumber: formData.phoneNumber,
+                    walletAddress: formData.walletAddress,
+                };
+                const response = await axios.put(`${Backend_EndPoint}api/v1/user/${user.userId}`, payload, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.status === 200) {
+                    toast.success("Admin Update Data Successfully");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 3000);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+            if (axios.isAxiosError(error) && error.response) {
+                toast.error(error.response.data.error || "An error occurred");
+            } else {
+                toast.error("An unexpected error occurred");
+            }
+        } finally {
+            setIsUpdateLoading(false);
+            setIsEditing(false);
+        }
     };
+
+    const getUserData = async () => {
+        try {
+            setIsLoading(true);
+            if (token) {
+                const user: any = jwtDecode(token);
+                const response = await axios.get(`${Backend_EndPoint}api/v1/user/${user.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                console.log(response.data,"response.data");
+                
+                const { username, email, password, phoneNumber, walletAddress } = response.data;
+                setFormData({ username, email, password, phoneNumber, walletAddress });
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+          
+        }
+    };
+
+    useEffect(() => {
+        if (token) {
+            getUserData();
+        }
+    }, [token]);
+
     return (
         <Box className="background-image">
             <Typography variant="h4" className="profile-title">Profile</Typography>
 
             <Box className="profile-container">
                 <Grid container spacing={2} className="profile-content">
-
+                    <ToastContainer />
                     {/* Left Side - User Info */}
                     <Grid item xs={12} md={4}>
                         <Card className="profile-card">
@@ -47,31 +123,8 @@ const Profile = () => {
                                         className="avatar-image"
                                         sx={{ width: 100, height: 100 }}
                                     />
-                                    <Typography variant="h6" className="user-name">User Name</Typography>
-                                    <Typography variant="body2" className="user-email">info@myadmin.com</Typography>
-                                </Box>
-
-                                <Box className="social-stats">
-                                    <Grid container spacing={2} justifyContent="center">
-                                        <Grid item>
-                                            <Box className="social-box">
-                                                <Typography variant="h6">258</Typography>
-                                                <Typography variant="caption">Facebook</Typography>
-                                            </Box>
-                                        </Grid>
-                                        <Grid item>
-                                            <Box className="social-box">
-                                                <Typography variant="h6">125</Typography>
-                                                <Typography variant="caption">Twitter</Typography>
-                                            </Box>
-                                        </Grid>
-                                        <Grid item>
-                                            <Box className="social-box">
-                                                <Typography variant="h6">556</Typography>
-                                                <Typography variant="caption">Dribble</Typography>
-                                            </Box>
-                                        </Grid>
-                                    </Grid>
+                                    <Typography variant="h6" className="user-name">{formData.username}</Typography>
+                                    <Typography variant="body2" className="user-email">{formData.email}</Typography>
                                 </Box>
                             </CardContent>
                         </Card>
@@ -81,41 +134,41 @@ const Profile = () => {
                     <Grid item xs={12} md={6}>
                         <Card className="details-card">
                             <CardContent>
-                                {/* Icon Button to Toggle Edit Mode */}
                                 <IconButton onClick={handleEditClick} className="edit-icon">
                                     <EditIcon />
                                 </IconButton>
 
                                 {/* Full Name */}
                                 <Box className="details-section">
-                                    <Typography variant="h6">Full Name</Typography>
+                                    <Typography variant="h6">UserName</Typography>
                                     <TextField
                                         fullWidth
-                                        name="fullName"
-                                        value={formData.fullName}
+                                        name="username"
+                                        value={formData.username}
+                                        onChange={handleInputChange}
                                         variant="outlined"
                                         size="small"
+                                        disabled={!isEditing}
                                     />
-
                                 </Box>
 
                                 {/* Email */}
                                 <Box className="details-section">
                                     <Typography variant="h6">Email</Typography>
-
                                     <TextField
                                         fullWidth
                                         name="email"
                                         value={formData.email}
+                                        onChange={handleInputChange}
                                         variant="outlined"
                                         size="small"
+                                        disabled={!isEditing}
                                     />
                                 </Box>
 
                                 {/* Password */}
                                 <Box className="details-section">
                                     <Typography variant="h6">Password</Typography>
-
                                     <TextField
                                         fullWidth
                                         name="password"
@@ -123,50 +176,40 @@ const Profile = () => {
                                         value={formData.password}
                                         variant="outlined"
                                         size="small"
+                                        disabled
                                     />
-
+                                    <Link href="/forgotpassword" variant="body2" sx={{marginLeft:"82%"}} >
+                                        Forgot Password
+                                    </Link>
                                 </Box>
 
                                 {/* Phone Number */}
                                 <Box className="details-section">
                                     <Typography variant="h6">Phone No</Typography>
-
                                     <TextField
                                         fullWidth
-                                        name="phone"
-                                        value={formData.phone}
+                                        name="phoneNumber"
+                                        value={formData.phoneNumber}
+                                        onChange={handleInputChange}
                                         variant="outlined"
                                         size="small"
+                                        disabled={!isEditing}
                                     />
-
                                 </Box>
 
-                                <Box className="details-section">
-                                    <Typography variant="h6">Address</Typography>
-
-                                    <TextField
-                                        fullWidth
-                                        name="Address"
-                                        value={formData.Address}
-                                        variant="outlined"
-                                        size="small"
-                                    />
-
-                                </Box>
-
+                                {/* Wallet Address */}
                                 <Box className="details-section">
                                     <Typography variant="h6">Wallet Address</Typography>
-
                                     <TextField
                                         fullWidth
-                                        name="Wallet Address"
-                                        value={formData.WalletAddress}
+                                        name="walletAddress"
+                                        value={formData.walletAddress}
+                                        onChange={handleInputChange}
                                         variant="outlined"
                                         size="small"
+                                        disabled={!isEditing}
                                     />
-
                                 </Box>
-
 
                                 {isEditing && (
                                     <Button
@@ -174,17 +217,16 @@ const Profile = () => {
                                         color="primary"
                                         onClick={handleUpdate}
                                         className="update-button"
+                                        sx={{ marginTop: '20px' }}
                                     >
-                                        Update
+                                        {isUpdateLoading ? (
+                                            <span className="loader"></span>
+                                        ) : "Update"}
                                     </Button>
                                 )}
                             </CardContent>
                         </Card>
                     </Grid>
-
-
-
-
                 </Grid>
             </Box>
         </Box>
