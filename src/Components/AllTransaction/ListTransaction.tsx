@@ -32,7 +32,10 @@ function ListTransaction() {
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectTransactionData, setSelectTransactionData] = useState<TransactionList | null>(null);
     const [transactionList, setTransactionList] = useState<TransactionList[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [totalPendingTransaction, setTotalPendingTransaction] = useState<number>()
+    const [totalConfirmTransaction, setTotalConfirmTransaction] = useState<number>()
+    const [totalCancelTransaction, setTotalCancelTransaction] = useState<number>()
     const itemsPerPage = 10;
     const token = localStorage.getItem('jwtToken');
 
@@ -47,8 +50,14 @@ function ListTransaction() {
                         'Content-Type': 'application/json',
                     },
                 });
-                console.log(response.data, "response");
+
                 if (response.status === 200) {
+                    const pendingTransaction = (response.data).filter((agent: TransactionList) => agent.Status === 'Initiated');
+                    const completedTransaction = (response.data).filter((agent: TransactionList) => agent.Status === 'Completed');
+                    const cancelTransaction = (response.data).filter((agent: TransactionList) => agent.Status === 'Cancelled');
+                    setTotalPendingTransaction(pendingTransaction.length)
+                    setTotalConfirmTransaction(completedTransaction.length)
+                    setTotalCancelTransaction(cancelTransaction.length)
                     setTransactionList(response.data)
                 }
             }
@@ -92,23 +101,31 @@ function ListTransaction() {
                         width: "100%"
                     }}
                 >
-                    <Typography variant="h4" sx={{ fontWeight: "bold" }}>Transaction List</Typography>
+                    <Typography variant="h4" sx={{ fontWeight: "bold" }}>Transaction List ({transactionList.length || 0})</Typography>
                     <Typography variant="body2">The agent initiated the transaction list.</Typography>
                 </Box>
                 <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                         <Card>
                             <CardContent>
-                                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Total Confirmed Transaction</Typography>
-                                <Typography variant="h5">3000</Typography>
+                                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Total Confirm Transaction</Typography>
+                                <Typography variant="h5">{totalConfirmTransaction || 0}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={4}>
                         <Card>
                             <CardContent>
                                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>Total Pending Transaction</Typography>
-                                <Typography variant="h5">60000</Typography>
+                                <Typography variant="h5">{totalPendingTransaction || 0}</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" sx={{ fontWeight: "bold" }}>Total Cancel Transaction</Typography>
+                                <Typography variant="h5">{totalCancelTransaction || 0}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>
@@ -124,11 +141,13 @@ function ListTransaction() {
                     <Box
                         sx={{
                             backgroundColor: '#fff',
-                            height: 'auto',
+                            height: '80vh',
                             marginTop: '20px',
                             borderRadius: '8px',
                             boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
                             padding: '20px',
+                            display: 'flex',
+                            flexDirection: 'column',
                         }}
                     >
                         {
@@ -174,24 +193,33 @@ function ListTransaction() {
                                                         <TableCell>
                                                             <span
                                                                 style={{
-                                                                    color: tx.Status === 'Completed' ? 'blue' : 'Initiated' ? 'green' : 'red',
-                                                                    fontWeight: 'bold'
+                                                                    color:
+                                                                        tx.Status === 'Completed' ? 'blue' :
+                                                                            tx.Status === 'Initiated' ? 'green' :
+                                                                                tx.Status === 'Cancelled' ? 'red' : 'yellow',
+                                                                    fontWeight: 'bold',
                                                                 }}
                                                             >
                                                                 {tx.Status}
                                                             </span>
                                                         </TableCell>
-                                                        <TableCell>
-                                                            <IconButton onClick={() => (setSelectTransactionData(tx), setShowUpdateModal(true))}>
-                                                                <EditIcon />
-                                                            </IconButton>
-                                                        </TableCell>
+
+                                                        {tx.Status === "Completed" ? (
+                                                            ""
+                                                        ) : (
+                                                            <TableCell>
+                                                                <IconButton onClick={() => (setSelectTransactionData(tx), setShowUpdateModal(true))}>
+                                                                    <EditIcon />
+                                                                </IconButton>
+                                                            </TableCell>
+                                                        )}
+
                                                     </TableRow>
                                                 ))}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
                                         <button onClick={handlePrevPage} disabled={currentPage === 0}>
                                             Previous
                                         </button>

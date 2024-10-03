@@ -32,3 +32,31 @@
     background-color: #1976d2;
 
 }
+
+.loader_OTP {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #FFF;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } 
+
+  .OTP-button{
+    width: 16% !important;
+    margin-left: 84% !important;
+    height: 51px;
+    background-color: #1976d2;
+
+}

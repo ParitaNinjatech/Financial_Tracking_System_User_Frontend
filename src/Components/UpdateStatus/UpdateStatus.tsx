@@ -63,7 +63,7 @@ const UpdateStatus: React.FC<UpdateTransactionStatus> = ({
                     } else if (status === 1) {
                         statusString = "Completed"
                     } else {
-                        statusString = "Cancel"
+                        statusString = "Cancelled"
                     }
                     const payLoad = {
                         status: statusString

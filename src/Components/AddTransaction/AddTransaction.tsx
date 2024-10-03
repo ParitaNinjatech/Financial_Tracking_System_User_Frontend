@@ -1,66 +1,115 @@
-import React, { useState } from 'react'
-import './AddTransaction.css'
-import { Box, Typography, Grid, TextField, FormControl, Button, InputLabel, Select, MenuItem } from '../../common/Index'
+import React, { useEffect, useState } from 'react'
+import { Box, Typography, Grid, TextField, FormControl, Button, InputLabel, Select, MenuItem, axios, ToastContainer, toast } from '../../common/Index'
 import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers5/react";
 import { useWeb3Modal } from "@web3modal/ethers5/react"
 import { ethers } from 'ethers';
 import { FinancialObj } from '../Constant/ContractObject';
-import axios from 'axios';
 import { Backend_EndPoint } from '../Constant/EndPoints';
 import { v4 as uuidv4 } from 'uuid';
-import { ToastContainer, toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
+import './AddTransaction.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 function AddTransaction() {
   const [status, setStatus] = useState<number>(3);
-  const [from, setFrom] = useState<string>('')
-  const [to, setTo] = useState<string>('')
+  const [from, setFrom] = useState<string>('');
+  const [to, setTo] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    from: '',
+    to: '',
+    amount: '',
+    status: ''
+  });
+  const [connectAddress, setConnecrAddress] = useState('')
   const { isConnected, address } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
   const { open } = useWeb3Modal();
   const token = localStorage.getItem('jwtToken');
 
+  const validateForm = (): boolean => {
+    let tempErrors = { ...errors };
+    let isValid = true;
+
+    // Validate "from" address
+    if (!from || !ethers.utils.isAddress(from)) {
+      tempErrors.from = 'Enter a valid Ethereum address';
+      isValid = false;
+    } else {
+      tempErrors.from = '';
+    }
+
+    // Validate "to" address
+    if (!to || !ethers.utils.isAddress(to)) {
+      tempErrors.to = 'Enter a valid Ethereum address';
+      isValid = false;
+    } else {
+      tempErrors.to = '';
+    }
+
+    // Validate amount
+    if (amount <= 0) {
+      tempErrors.amount = 'Enter a positive amount';
+      isValid = false;
+    } else {
+      tempErrors.amount = '';
+    }
+
+    // Validate status
+    if (status === 3) {
+      tempErrors.status = 'Please select a transaction status';
+      isValid = false;
+    } else {
+      tempErrors.status = '';
+    }
+
+    setErrors(tempErrors);
+    return isValid;
+  };
 
   const Initiate = async () => {
+    if (!validateForm()) {
+      toast.error("Please correct the form errors");
+      return;
+    }
+
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       if (walletProvider && token) {
         const provider = new ethers.providers.Web3Provider(walletProvider);
         const signer = provider.getSigner();
-        const contractObj = await FinancialObj(signer)
+        const contractObj = await FinancialObj(signer);
 
-        const amounttoString = ethers.utils.parseUnits(amount.toString());
+        const amountToString = ethers.utils.parseUnits(amount.toString());
         const newId = uuidv4();
 
-        const tx = await contractObj.initiateTransaction(newId, address, from, to, amounttoString.toString());
-        await tx.wait()
-        console.log(tx.hash, "Hash");
-        getEventData(tx.hash, newId)
+        const tx = await contractObj.initiateTransaction(newId, address, from, to, amountToString.toString());
+        await tx.wait();
+        getEventData(tx.hash, newId);
       } else {
-        alert("Please Connect Wallet Properly")
+        toast.error("Please connect your wallet properly");
       }
     } catch (error) {
       console.log(error);
+      toast.error("Transaction initiation failed");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const getEventData = async (hash: any, txId: any) => {
     try {
       if (hash && walletProvider) {
         const provider = new ethers.providers.Web3Provider(walletProvider);
         const getEvent = await provider.getTransactionReceipt(hash);
-        console.log(getEvent, "event");
+
         if (getEvent && getEvent.logs) {
           const tokenInterface = new ethers.utils.Interface(['event TransactionInitiated(uint256 indexed id,string indexed transactionId,address sender,address moneySender,address recipient,uint256 amount,uint256 transactionCreatedAt)']);
           const transferLog = getEvent.logs.find((log: any) => log.topics.includes(tokenInterface.getEventTopic('TransactionInitiated')));
-          if (transferLog && transferLog.topics[1]) {
-            console.log(transferLog.topics[1], "transferLog");
-            const value = transferLog.topics[1];
 
+          if (transferLog && transferLog.topics[1]) {
+            const value = transferLog.topics[1];
             const decimalValue = parseInt(value, 16);
 
             if (decimalValue) {
@@ -72,7 +121,7 @@ function AddTransaction() {
                 amount: amount.toString(),
                 index: decimalValue,
                 txId: txId
-              }
+              };
 
               const response = await axios.post(`${Backend_EndPoint}api/v1/transaction/`, payload, {
                 headers: {
@@ -82,34 +131,55 @@ function AddTransaction() {
               });
 
               if (response.status === 201) {
-                toast.success('Transaction Initiated SuccessFully');
-              }
+                toast.success('Transaction initiated successfully');
 
-              console.log(response.status, "aa");
+                setTimeout(() => {
+                  window.location.href = '/listTransaction';
+                }, 3000);
+              }
             }
           } else {
-            alert('No relevant log found in the transaction receipt.');
+            toast.error('No relevant log found in the transaction receipt.');
           }
         } else {
-          alert('No logs found in the transaction receipt.');
+          toast.error('No logs found in the transaction receipt.');
         }
       }
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.error || "An error occurred");
-      } else {
-        toast.error("An unexpected error occurred");
-      }
+      toast.error("An error occurred while fetching transaction data");
     }
-  }
+  };
+
+  const getUserData = async () => {
+    try {
+      if (token) {
+        const user: any = jwtDecode(token);
+        const response = await axios.get(`${Backend_EndPoint}api/v1/user/${user.userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const { walletAddress } = response.data;
+        setConnecrAddress(walletAddress)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (isConnected) {
+      getUserData()
+    }
+  }, [isConnected])
+
   return (
     <div className='background-image'>
       <div className='box-Container'>
-        <Box
-          className='Main_Box'
-        >
+        <Box className='Main_Box'>
           <ToastContainer />
-          <Typography variant="h4" sx={{ fontWeight: "bold" }}>Initiate Transaction </Typography>
+          <Typography variant="h4" sx={{ fontWeight: "bold" }}>Initiate Transaction</Typography>
           <Typography variant="body2">Transaction Starter turns into Agent A</Typography>
         </Box>
 
@@ -129,6 +199,8 @@ function AddTransaction() {
                     value={from}
                     onChange={(e) => setFrom(e.target.value)}
                     autoFocus
+                    error={!!errors.from}
+                    helperText={errors.from}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -141,6 +213,8 @@ function AddTransaction() {
                     value={to}
                     onChange={(e) => setTo(e.target.value)}
                     autoComplete="to"
+                    error={!!errors.to}
+                    helperText={errors.to}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -153,6 +227,8 @@ function AddTransaction() {
                     placeholder='0'
                     value={amount === 0 ? '' : amount}
                     onChange={(e) => setAmount(Number(e.target.value))}
+                    error={!!errors.amount}
+                    helperText={errors.amount}
                     slotProps={{
                       inputLabel: {
                         shrink: true,
@@ -162,7 +238,7 @@ function AddTransaction() {
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth error={!!errors.status}>
                     <InputLabel id="demo-simple-select-label">Transaction Status</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
@@ -176,10 +252,12 @@ function AddTransaction() {
                       <MenuItem value={1}>Completed</MenuItem>
                       <MenuItem value={2}>Cancel</MenuItem>
                     </Select>
+                    {errors.status && <Typography color="error">{errors.status}</Typography>}
                   </FormControl>
                 </Grid>
-                {
-                  isConnected ? (<Button
+
+                {isConnected ? (
+                  <Button
                     type="button"
                     fullWidth
                     variant="contained"
@@ -188,20 +266,19 @@ function AddTransaction() {
                     onClick={() => Initiate()}
                   >
                     {isLoading ? (<span className="loader_Add_Tx"></span>) : "Add Transaction"}
-                  </Button>) : (
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
-                      className='Add-button'
-                      type="button"
-                      onClick={() => open()}
-                    >
-                      Connect Wallet
-                    </Button>
-
-                  )
-                }
+                  </Button>
+                ) : (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
+                    className='Add-button'
+                    type="button"
+                    onClick={() => open()}
+                  >
+                    Connect Wallet
+                  </Button>
+                )}
               </Grid>
             </Box>
           </Box>
@@ -211,4 +288,4 @@ function AddTransaction() {
   )
 }
 
-export default AddTransaction
+export default AddTransaction;
