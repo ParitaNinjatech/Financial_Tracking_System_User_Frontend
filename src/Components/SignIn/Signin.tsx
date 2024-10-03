@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Avatar,
   Button,
@@ -10,30 +11,105 @@ import {
   Typography,
   Container,
   Card,
-  CardContent, Grid, LockOutlinedIcon, createTheme, ThemeProvider
-} from "../../common/Index"
-import { useState } from "react";
-import { Backend_EndPoint } from "../Constant/EndPoints";
-import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
+  CardContent, Grid, LockOutlinedIcon, createTheme, ThemeProvider, ToastContainer, toast, axios
+} from "../../common/Index";
+import { Metamask, BackGroundImage } from '../../assets/Image';
+import { Backend_EndPoint } from '../Constant/EndPoints';
 import 'react-toastify/dist/ReactToastify.css';
 
 const theme = createTheme();
 
 export default function Signin() {
-  const [userName, setUserName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+  const [username, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [allowExtraEmails, setAllowExtraEmails] = useState<boolean>(false);
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    password: '',
+    checkbox: ''
+  });
+
+  const validateUsername = (value: string) => {
+    const usernameRegex = /^[a-zA-Z0-9]{6,16}$/;
+    if (!email && (!value || !usernameRegex.test(value))) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        username: 'Username must contain only letters and numbers, and be between 6 to 16 characters long',
+      }));
+    } else {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        username: '',
+      }));
+    }
+  };
+
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!username && (!value || !emailRegex.test(value))) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        email: 'Enter a valid email address',
+      }));
+    } else {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        email: '',
+      }));
+    }
+  };
+
+  const validatePassword = (value: string) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,12}$/;
+    if (!value || !passwordRegex.test(value)) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        password: 'Password must be 6-12 characters long and include at least one letter, one number, and one special character',
+      }));
+    } else {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        password: '',
+      }));
+    }
+  };
+
+  const validateCheckbox = (isChecked: boolean) => {
+    if (!isChecked) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        checkbox: 'You must agree to the terms of service.',
+      }));
+    } else {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        checkbox: '',
+      }));
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    validateUsername(username);
+    validateEmail(email);
+    validatePassword(password);
+    validateCheckbox(allowExtraEmails);
+
+    if (errors.username || errors.email || errors.password || errors.checkbox) {
+      toast.error("Please correct the form errors");
+      return;
+    }
+
     try {
       setIsLoading(true);
       const payload = {
-        username: userName,
+        username: username,
         password: password,
-        email: email
+        role: "Agent"
       };
 
       const response = await axios.post(`${Backend_EndPoint}api/v1/user/login`, payload, {
@@ -43,7 +119,7 @@ export default function Signin() {
       });
 
       if (response.status === 200) {
-        toast.success("Agent Login Successfully");
+        toast.success("Agent Login SuccessFully");
         localStorage.setItem('jwtToken', response.data.token);
 
         setTimeout(() => {
@@ -51,6 +127,7 @@ export default function Signin() {
         }, 3000);
       }
     } catch (error) {
+      console.log(error);
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.error || "An error occurred");
       } else {
@@ -61,8 +138,15 @@ export default function Signin() {
     }
   };
 
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAllowExtraEmails(event.target.checked);
+    validateCheckbox(event.target.checked);
+  };
+
   const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
+    validateUsername(e.target.value);
+
     if (e.target.value !== '') {
       setEmail('');
     }
@@ -70,9 +154,16 @@ export default function Signin() {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+    validateEmail(e.target.value);
+
     if (e.target.value !== '') {
       setUserName('');
     }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    validatePassword(e.target.value);
   };
 
   return (
@@ -81,11 +172,24 @@ export default function Signin() {
         <Container
           component="main"
           maxWidth={false}
-          className="container"
+          sx={{
+            minHeight: '100vh',
+            width: '100vw',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundImage: `url(${BackGroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            padding: 0,
+            margin: 0,
+            overflow: 'hidden',
+          }}
         >
           <CssBaseline />
           <ToastContainer />
-          <Grid container spacing={2} className="container_title">
+          <Grid container spacing={2} sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' }, pr: 10 }}>
               <Box>
                 <Typography variant="h4" gutterBottom sx={{ color: "maroon", mb: 4 }}>
@@ -95,10 +199,10 @@ export default function Signin() {
             </Grid>
 
             {/* Right Side - Sign In Form */}
-            <Grid item xs={12} md={4} sx={{ pl: 8 }}>
+            <Grid item xs={12} md={4} sx={{ pl: 8 }} >
               <Card sx={{ p: 3 }}>
                 <CardContent>
-                  <Box className="main_box">
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                       <LockOutlinedIcon />
                     </Avatar>
@@ -115,11 +219,14 @@ export default function Signin() {
                             label="User Name"
                             name="username"
                             autoComplete="username"
-                            value={userName}
+                            value={username}
                             onChange={handleUserNameChange}
-                            disabled={!!email} 
+                            disabled={!!email}
+                            error={Boolean(errors.username && !email)}
+                            helperText={errors.username && !email ? errors.username : ''}
                           />
                         </Grid>
+
                         <Grid item xs={12}>
                           <TextField
                             required
@@ -130,7 +237,9 @@ export default function Signin() {
                             autoComplete="email"
                             value={email}
                             onChange={handleEmailChange}
-                            disabled={!!userName} 
+                            disabled={!!username}
+                            error={Boolean(errors.email && !username)}
+                            helperText={errors.email && !username ? errors.email : ''}
                           />
                         </Grid>
 
@@ -144,33 +253,72 @@ export default function Signin() {
                             id="password"
                             autoComplete="new-password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={handlePasswordChange}
+                            error={Boolean(errors.password)}
+                            helperText={errors.password}
                           />
                         </Grid>
                         <Grid container justifyContent="flex-end">
                           <Grid item>
-                            <Link href="/forgotPassword" variant="body2">
+                            <Link href="/forgotpassword" variant="body2">
                               Forgot Password
                             </Link>
                           </Grid>
                         </Grid>
                         <Grid item xs={12}>
                           <FormControlLabel
-                            control={<Checkbox value="allowExtraEmails" color="primary" />}
+                            control={
+                              <Checkbox
+                                checked={allowExtraEmails}
+                                onChange={handleCheckboxChange}
+                                color="primary"
+                              />
+                            }
                             label="I agree to all statements in Terms of service."
                             required
                           />
+                          {errors.checkbox && <Typography color="error">{errors.checkbox}</Typography>}
                         </Grid>
                       </Grid>
-                      <Button
-                        type="submit"
+                      {
+                        isLoading ? (
+                          <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
+                            className='signUp-button'
+                          >
+                            <span className="loader"></span>
+                          </Button>
+                        ) : (
+                          <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
+                            className='signUp-button'
+                          >
+                            Sign In
+                          </Button>
+                        )
+                      }
+
+                      {/* <Button
+                        type="button"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 3, mb: 2, borderRadius: "26px" }}
-                        className='signUp-button'
+                        sx={{ mt: 3, mb: 2, display: 'flex', alignItems: 'center', borderRadius: "26px" }}
+                        className="signUp-button"
                       >
-                        {isLoading ? (<span className="loader"></span>) : "Sign In"}
-                      </Button>
+                        <Box
+                          component="img"
+                          src={Metamask}
+                          alt="Metamask Logo"
+                          sx={{ width: '24px', height: '24px', marginRight: '8px' }}
+                        />
+                        Sign In with Metamask
+                      </Button> */}
                       <Grid container justifyContent="flex-end">
                         <Grid item>
                           <Link href="/signup" variant="body2">
@@ -183,6 +331,7 @@ export default function Signin() {
                 </CardContent>
               </Card>
             </Grid>
+
           </Grid>
         </Container>
       </ThemeProvider>

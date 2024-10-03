@@ -23,7 +23,7 @@ export default function Header() {
         window.location.href = '/signIn';
       }, 3000);
     } catch (error) {
-
+      console.log(error);
     }
   }
   return (
@@ -49,30 +49,31 @@ export default function Header() {
         </Typography>
 
         {token ? (
-          <><nav>
-            <Link
-              variant="button"
-              href="/addTransaction"
-              sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
-            >
-              Initiate Transaction
-            </Link>
-            <Link
-              variant="button"
-              href="/listTransaction"
-              sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
-            >
-              List Transaction
-            </Link>
-            <Link
-              variant="button"
-              href="/contactus"
-              sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
-            >
-              Contact
-            </Link>
-          </nav>
-          <IconButton sx={{ ml: 1, color: "white" }}>
+          <>
+            <nav>
+              <Link
+                variant="button"
+                href="/addTransaction"
+                sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
+              >
+                Initiate Transaction
+              </Link>
+              <Link
+                variant="button"
+                href="/listTransaction"
+                sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
+              >
+                List Transaction
+              </Link>
+              <Link
+                variant="button"
+                href="/contactus"
+                sx={{ my: 1, mx: 1.5, textDecoration: 'none', color: "white", fontWeight: "bold" }}
+              >
+                Contact
+              </Link>
+            </nav>
+            <IconButton sx={{ ml: 1, color: "white" }}>
               <SearchIcon />
             </IconButton><Button sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
               <w3m-button />

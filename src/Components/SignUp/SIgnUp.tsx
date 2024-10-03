@@ -14,17 +14,15 @@ import {
     CardContent,
     Grid,
     createTheme,
-    ThemeProvider, FormControl
+    ThemeProvider, FormControl, LockOutlinedIcon, axios, ToastContainer, toast
 } from "../../common/Index";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
 import { Metamask } from '../../assets/Image';
-import "./SignUp.css";
-import axios from 'axios';
 import { Backend_EndPoint } from '../Constant/EndPoints';
-import { ToastContainer, toast } from 'react-toastify';
+import 'react-phone-input-2/lib/style.css';
+import "./SignUp.css";
 import 'react-toastify/dist/ReactToastify.css';
+
 const theme = createTheme();
 
 export default function SignUp() {
@@ -35,41 +33,121 @@ export default function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState<string>('')
     const [walletAddress, setWalletAddress] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [allowExtraEmails, setAllowExtraEmails] = useState<boolean>(false);
+    const [errors, setErrors] = useState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        phoneNumber: '',
+        walletAddress: '',
+        checkbox: ''
+    });
 
+    const validateForm = (): boolean => {
+        let tempErrors = { ...errors };
+        let isValid = true;
+
+        const usernameRegex = /^[a-zA-Z0-9]{6,16}$/;
+        if (!username || !usernameRegex.test(username)) {
+            tempErrors.username = 'Username must contain only letters and numbers, and be between 6 to 16 characters long';
+            isValid = false;
+        } else {
+            tempErrors.username = '';
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            tempErrors.email = 'Enter a valid email address';
+            isValid = false;
+        } else {
+            tempErrors.email = '';
+        }
+
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,12}$/;
+        if (!password || !passwordRegex.test(password)) {
+            tempErrors.password = 'Password must be 6-12 characters long and include at least one letter, one number, and one special character';
+            isValid = false;
+        } else {
+            tempErrors.password = '';
+        }
+
+        if (password !== confirmPassword) {
+            tempErrors.confirmPassword = 'Passwords do not match';
+            isValid = false;
+        } else {
+            tempErrors.confirmPassword = '';
+        }
+
+        if (!phoneNumber || phoneNumber.length <= 10) {
+            tempErrors.phoneNumber = 'Enter a valid phone number';
+            isValid = false;
+        } else {
+            tempErrors.phoneNumber = '';
+        }
+
+        if (!walletAddress) {
+            tempErrors.walletAddress = 'Wallet Address is required';
+            isValid = false;
+        } else {
+            tempErrors.walletAddress = '';
+        }
+
+        if (!allowExtraEmails) {
+            tempErrors.checkbox = 'You must agree to the terms of service.';
+            isValid = false;
+        } else {
+            tempErrors.checkbox = '';
+        }
+
+        setErrors(tempErrors);
+        return isValid;
+    };
+
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setAllowExtraEmails(event.target.checked);
+        if (event.target.checked) {
+            setErrors(prevErrors => ({ ...prevErrors, checkbox: '' }));
+        }
+    };
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        try {
-            setIsLoading(true);
-            const payload = {
-                username: username,
-                password: password,
-                email: email,
-                phoneNumber: phoneNumber,
-                walletAddress: walletAddress,
-                role: "Agent",
-                isApproved:false
+        if (validateForm()) {
+            try {
+                setIsLoading(true);
+                const payload = {
+                    username: username,
+                    password: password,
+                    email: email,
+                    phoneNumber: phoneNumber,
+                    walletAddress: walletAddress,
+                    role: "Agent",
+                    isApproved:false
+                }
+    
+                const response = await axios.post(`${Backend_EndPoint}api/v1/user/registration-request`, payload, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.status === 201) {
+                    toast.success("Agent Added Registration Request Successfully");
+                    setTimeout(() => {
+                        window.location.href = '/signIn';
+                    }, 3000);
+                }
+            } catch (error) {
+                console.log(error);
+                if (axios.isAxiosError(error) && error.response) {
+                    toast.error(error.response.data.error || "An error occurred");
+                } else {
+                    toast.error("An unexpected error occurred");
+                }
+            } finally {
+                setIsLoading(false);
             }
-
-            const response = await axios.post(`${Backend_EndPoint}api/v1/user/registration-request`, payload, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (response.status === 201) {
-                toast.success("Agent Registered Successfully");
-                setTimeout(() => {
-                    window.location.href = '/signIn';
-                }, 3000);
-            }
-        } catch (error) {
-            console.log(error);
-            if (axios.isAxiosError(error) && error.response) {
-                toast.error(error.response.data.error || "An error occurred");
-            } else {
-                toast.error("An unexpected error occurred");
-            }
-        } finally {
-            setIsLoading(false)
+        } else {
+            toast.error("Please correct the form errors");
         }
     };
 
@@ -117,6 +195,8 @@ export default function SignUp() {
                                                     autoComplete="username"
                                                     value={username}
                                                     onChange={(e) => setUserName(e.target.value)}
+                                                    error={Boolean(errors.username)}
+                                                    helperText={errors.username}
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
@@ -129,6 +209,8 @@ export default function SignUp() {
                                                     autoComplete="email"
                                                     value={email}
                                                     onChange={(e) => setEmail(e.target.value)}
+                                                    error={Boolean(errors.email)}
+                                                    helperText={errors.email}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
@@ -142,6 +224,8 @@ export default function SignUp() {
                                                     autoComplete="new-password"
                                                     value={password}
                                                     onChange={(e) => setPassWord(e.target.value)}
+                                                    error={Boolean(errors.password)}
+                                                    helperText={errors.password}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
@@ -154,6 +238,8 @@ export default function SignUp() {
                                                     autoComplete="Confirm Password"
                                                     value={confirmPassword}
                                                     onChange={(e) => setConfirmPassword(e.target.value)}
+                                                    error={Boolean(errors.confirmPassword)}
+                                                    helperText={errors.confirmPassword}
                                                 />
                                             </Grid>
 
@@ -179,6 +265,11 @@ export default function SignUp() {
                                                         }}
                                                     />
                                                 </FormControl>
+                                                {errors.phoneNumber && (
+                                                    <Typography color="error" variant="body2">
+                                                        {errors.phoneNumber}
+                                                    </Typography>
+                                                )}
                                             </Grid>
 
                                             <Grid item xs={12}>
@@ -192,15 +283,24 @@ export default function SignUp() {
                                                     autoComplete="Wallet Address"
                                                     value={walletAddress}
                                                     onChange={(e) => setWalletAddress(e.target.value)}
+                                                    error={Boolean(errors.walletAddress)}
+                                                    helperText={errors.walletAddress}
                                                 />
                                             </Grid>
 
                                             <Grid item xs={12}>
                                                 <FormControlLabel
-                                                    control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                                    label="I agree all statements in Terms of service."
+                                                    control={
+                                                        <Checkbox
+                                                            checked={allowExtraEmails}
+                                                            onChange={handleCheckboxChange}
+                                                            color="primary"
+                                                        />
+                                                    }
+                                                    label="I agree to all statements in Terms of service."
                                                     required
                                                 />
+                                                {errors.checkbox && <Typography color="error">{errors.checkbox}</Typography>} {/* Error message */}
                                             </Grid>
                                         </Grid>
 
