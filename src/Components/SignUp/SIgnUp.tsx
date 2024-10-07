@@ -17,7 +17,6 @@ import {
     ThemeProvider, FormControl, LockOutlinedIcon, axios, ToastContainer, toast
 } from "../../common/Index";
 import PhoneInput from 'react-phone-input-2';
-import { Metamask } from '../../assets/Image';
 import { Backend_EndPoint } from '../Constant/EndPoints';
 import 'react-phone-input-2/lib/style.css';
 import "./SignUp.css";

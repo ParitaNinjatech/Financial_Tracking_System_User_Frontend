@@ -172,24 +172,11 @@ export default function Signin() {
         <Container
           component="main"
           maxWidth={false}
-          sx={{
-            minHeight: '100vh',
-            width: '100vw',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundImage: `url(${BackGroundImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            padding: 0,
-            margin: 0,
-            overflow: 'hidden',
-          }}
+         className='container'
         >
           <CssBaseline />
           <ToastContainer />
-          <Grid container spacing={2} sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Grid container spacing={2} className='container_title'>
             <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' }, pr: 10 }}>
               <Box>
                 <Typography variant="h4" gutterBottom sx={{ color: "maroon", mb: 4 }}>
@@ -202,7 +189,7 @@ export default function Signin() {
             <Grid item xs={12} md={4} sx={{ pl: 8 }} >
               <Card sx={{ p: 3 }}>
                 <CardContent>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <Box className='main_box'>
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                       <LockOutlinedIcon />
                     </Avatar>

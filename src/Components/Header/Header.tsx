@@ -32,7 +32,7 @@ export default function Header() {
       sx={{
         borderBottom: '1px solid #ddd',
         background: '#1976d2;',
-        backgroundBlendMode: 'screen',
+        backgroundBlendMode: 'screen'
       }}
     >
       <Toolbar sx={{ flexWrap: 'wrap' }}>
@@ -77,7 +77,8 @@ export default function Header() {
               <SearchIcon />
             </IconButton><Button sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
               <w3m-button />
-            </Button><div>
+            </Button>
+            <div>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -115,13 +116,16 @@ export default function Header() {
                   logOut
                 </Button></MenuItem>
               </Menu>
-            </div></>
+            </div>
+            </>
         ) : (
-          <><Button href="/signIn" sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
-            SignIn
-          </Button><Button href="/signup" sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
+          <>
+            <Button href="/signIn" sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
+              SignIn
+            </Button><Button href="/signup" sx={{ my: 1, mx: 1.5, color: "white", fontWeight: "bold" }}>
               SignUp
-            </Button></>
+            </Button>
+          </>
         )}
       </Toolbar>
     </AppBar>

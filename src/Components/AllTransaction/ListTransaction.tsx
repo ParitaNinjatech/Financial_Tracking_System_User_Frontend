@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
     Grid, Card, CardContent, Typography, TableContainer, Table, TableHead, TableRow,
-    TableCell, TableBody, Box, IconButton, VisibilityIcon, EditIcon
+    TableCell, TableBody, Box, IconButton, EditIcon, axios, Paper, SearchIcon,
+    InputBase
 } from "../../common/Index";
 import './ListTransaction.css'
 import TrackTransaction from "../TrackTransaction/TrackTransaction"
 import UpdateStatus from '../UpdateStatus/UpdateStatus';
 import { format } from 'date-fns';
-import axios from 'axios';
 import { Backend_EndPoint } from '../Constant/EndPoints';
 
 
@@ -35,7 +35,8 @@ function ListTransaction() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [totalPendingTransaction, setTotalPendingTransaction] = useState<number>()
     const [totalConfirmTransaction, setTotalConfirmTransaction] = useState<number>()
-    const [totalCancelTransaction, setTotalCancelTransaction] = useState<number>()
+    const [totalCancelTransaction, setTotalCancelTransaction] = useState<number>();
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const itemsPerPage = 10;
     const token = localStorage.getItem('jwtToken');
 
@@ -68,8 +69,19 @@ function ListTransaction() {
         }
     }
 
-    const totalPages = Math.ceil(transactionList.length / itemsPerPage);
-    const displayedTransaction = transactionList.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+    const filteredTransactions = useMemo(() => {
+        if (!searchTerm) return transactionList;
+        return transactionList.filter((tx: any) =>
+            tx.txId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            tx.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            tx.to.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            tx.agentA.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            tx.Status.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [transactionList, searchTerm]);
+
+    const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+    const displayedTransaction = filteredTransactions.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
@@ -83,6 +95,11 @@ function ListTransaction() {
         }
     };
 
+    const handleFocus = () => {
+        setSearchTerm('');
+    };
+
+
     useEffect(() => {
         if (token) {
             FetchListTransaction()
@@ -92,17 +109,30 @@ function ListTransaction() {
         <><div className='background-image'>
             <div className='box-Container_List'>
                 <Box
-                    sx={{
-                        backgroundColor: '#fff',
-                        padding: '15px',
-                        borderRadius: '8px',
-                        boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
-                        marginBottom: '20px',
-                        width: "100%"
-                    }}
+                    className='first_box'
                 >
-                    <Typography variant="h4" sx={{ fontWeight: "bold" }}>Transaction List ({transactionList.length || 0})</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant="h4" sx={{ fontWeight: "bold" }}>Transaction List ({transactionList.length || 0})</Typography>
+
+                        <Paper
+                            component="form"
+                            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, marginLeft: "49%" }}
+                        >
+                            <InputBase
+                                sx={{ ml: 1, flex: 1 }}
+                                placeholder="Search transactions"
+                                inputProps={{ 'aria-label': 'search transactions' }}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onFocus={handleFocus}
+                            />
+                            <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+                                <SearchIcon />
+                            </IconButton>
+                        </Paper>
+                    </Box>
                     <Typography variant="body2">The agent initiated the transaction list.</Typography>
+
                 </Box>
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
@@ -132,23 +162,10 @@ function ListTransaction() {
                 </Grid>
 
                 <Box
-                    sx={{
-                        flexGrow: 1,
-                        backgroundColor: '#f4f4f4',
-                        padding: '20px',
-                    }}
+                    className='second_box'
                 >
                     <Box
-                        sx={{
-                            backgroundColor: '#fff',
-                            height: '80vh',
-                            marginTop: '20px',
-                            borderRadius: '8px',
-                            boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
-                            padding: '20px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
+                        className='third_box'
                     >
                         {
                             isLoading ? (
@@ -213,13 +230,12 @@ function ListTransaction() {
                                                                 </IconButton>
                                                             </TableCell>
                                                         )}
-
                                                     </TableRow>
                                                 ))}
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
+                                    <Box className='footer'>
                                         <button onClick={handlePrevPage} disabled={currentPage === 0}>
                                             Previous
                                         </button>

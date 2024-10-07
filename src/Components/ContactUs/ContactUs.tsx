@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import {
     Button,
     CssBaseline,
@@ -14,7 +14,8 @@ import {
 } from "../../common/Index";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
-import { BackGroundImage } from '../../assets/Image';
+import './ContactUs.css'
+
 const theme = createTheme();
 
 export default function ContactUs() {
@@ -24,24 +25,11 @@ export default function ContactUs() {
             <Container
                 component="main"
                 maxWidth={false}
-                sx={{
-                    minHeight: '120vh',
-                    width: '100vw',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundImage: `url(${BackGroundImage})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    padding: 0,
-                    margin: 0,
-                    overflow: 'hidden',
-                }}
+                className='container'
             >
                 <CssBaseline />
 
-                <Grid item xs={10} md={6} sx={{ pl: 6, marginTop: "-420px", width: "65%" }}>
+                <Grid item xs={10} md={6} sx={{ pl: 6, marginTop: "-110px", width: "65%" }}>
                     <Card sx={{ p: 1 }}>
                         <Box sx={{ bgcolor: 'dimgrey', color: '#fff', p: 4, textAlign: 'center' }}>
                             <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>

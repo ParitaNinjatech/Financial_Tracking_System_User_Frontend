@@ -1,0 +1,11 @@
+.first_grid{
+    display: flex;
+    justify-content: space-between;
+}
+
+.second_grid{
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-left: -201px;
+}

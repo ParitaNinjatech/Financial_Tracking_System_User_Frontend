@@ -1,45 +1,40 @@
 .background-image {
-    background-image: url('/home/ninjatech/Desktop/Live_Project/Financial_Tracking_System_User_frontend/src/assets/BackGroundImage.png');
-    background-size: cover;
-    background-position: center;
-    min-height: 110vh;
-    padding-top: 10px;
+  background-image: url('/home/ninjatech/Desktop/Live_Project/Financial_Tracking_System_User_frontend/src/assets/BackGroundImage.png');
+  background-size: cover;
+  background-position: center;
+  min-height: 110vh;
+  padding-top: 10px;
 }
 
 
-.box-Container_List{
-    padding: 0px;
-    margin-top: -11px;
-    margin-left: 250px;
-    width: 78%;
+.box-Container_List {
+  padding: 0px;
+  margin-top: -11px;
+  margin-left: 250px;
+  width: 78%;
 }
 
 .edit-icon {
   margin-left: -70px;
 
-  }
+}
 
 
-.Action{
+.Action {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 3px;
 }
 
-.table-row{
+.table-row {
   font-weight: bold !important;
 }
 
-.main_box{
-  /* sx={{
-    flexGrow: 1,
-    backgroundColor: '#f4f4f4',
-    padding: '20px',
-}} */
- flex-grow: 1;
- background-color: white;
- padding: 20px;
+.main_box {
+  flex-grow: 1;
+  background-color: white;
+  padding: 20px;
 }
 
 
@@ -60,7 +55,40 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
-} 
+}
+
+.first_box {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0, 1);
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.second_box{
+  flex-grow: 1;
+  background-color: #f4f4f4;
+  padding: '20px';
+}
+
+.third_box{
+  background-color: #fff;
+  height: 80vh;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0,1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer{
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+}

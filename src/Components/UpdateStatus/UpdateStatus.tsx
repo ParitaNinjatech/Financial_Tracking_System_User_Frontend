@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import {
     Modal, Box, Typography, Button, CloseIcon, IconButton,
-    Grid, TextField, FormControl, Select, InputLabel, MenuItem
+    Grid, TextField, FormControl, Select, InputLabel, MenuItem,axios,ToastContainer,toast
 } from '../../common/Index';
-import axios from 'axios';
 import { Backend_EndPoint } from '../Constant/EndPoints';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { jwtDecode } from 'jwt-decode';
 import { useWeb3ModalProvider } from "@web3modal/ethers5/react";
 import { ethers } from 'ethers';
 import { FinancialObj } from '../Constant/ContractObject';
@@ -56,7 +53,6 @@ const UpdateStatus: React.FC<UpdateTransactionStatus> = ({
                 const updateTx = await contractObj.updateTransactionStatus(transactionId.index, status)
                 await updateTx.wait();
                 if (updateTx.hash) {
-                    const user: any = jwtDecode(token);
                     let statusString: string;
                     if (status === 0) {
                         statusString = "Initiate"

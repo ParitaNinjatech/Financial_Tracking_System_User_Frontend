@@ -58,7 +58,8 @@ import {
 } from '@mui/lab';
 import { AccessTime } from '@mui/icons-material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
 
 export{
     Avatar,
@@ -119,4 +120,6 @@ export{
     axios,
     ToastContainer,
     toast,
+    Paper,
+    InputBase
 }

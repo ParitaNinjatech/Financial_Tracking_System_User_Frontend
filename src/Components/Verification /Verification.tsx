@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Box, Typography, Grid, TextField, Button, ContentCopyIcon, IconButton, ToastContainer, toast, axios } from "../../common/Index"
 import { useWeb3ModalAccount } from "@web3modal/ethers5/react";
 import { Backend_EndPoint } from '../Constant/EndPoints';
-import { useWeb3Modal } from "@web3modal/ethers5/react"
 import "./Verifaction.css"
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,8 +10,6 @@ function Verification() {
     const [txId, setTxId] = useState<string>('');
     const [generatedOTP, setGeneratedOTP] = useState<number | null>();
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const token = localStorage.getItem('jwtToken');
-    const { open } = useWeb3Modal();
 
     const GenerateOTP = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

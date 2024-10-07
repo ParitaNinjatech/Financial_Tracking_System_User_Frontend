@@ -209,7 +209,7 @@ function ForgotPassword() {
                                                     label="I agree to all statements in Terms of service."
                                                     required
                                                 />
-                                                {errors.checkbox && <Typography color="error">{errors.checkbox}</Typography>} {/* Error message */}
+                                                {errors.checkbox && <Typography color="error">{errors.checkbox}</Typography>} 
                                             </Grid>
                                         </Grid>
                                         <Button

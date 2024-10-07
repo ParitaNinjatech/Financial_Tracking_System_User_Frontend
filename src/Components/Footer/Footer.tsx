@@ -4,6 +4,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import './Footer.css'
 
 export default function Footer() {
     return (
@@ -13,11 +14,10 @@ export default function Footer() {
                 backgroundColor: 'aliceblue',
                 py: 6,
                 px: 2,
-
             }}
 
         >
-            <Grid container spacing={4} sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Grid container spacing={4} className='first_grid' >
                 {/* Logo and Social Links */}
                 <Grid item xs={12} md={3}>
                     <Typography variant="h6" gutterBottom>
@@ -27,7 +27,7 @@ export default function Footer() {
                 </Grid>
 
                 {/* Company Links */}
-                <Grid item xs={12} md={3} sx={{ display: "flex", justifyContent: "space-between", fontWeight: "bolds", marginLeft: "-201px" }}>
+                <Grid item xs={12} md={3} className='second_grid'>
                     <Link href="#" variant="body2" color="textPrimary" display="block" sx={{ mb: 3 }}>
                         About
                     </Link>
